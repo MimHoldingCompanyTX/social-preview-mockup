@@ -1,0 +1,2 @@
+ID                                   Name                     Schedule                         Next       Last       Status    Target    Agent     
+3a6ad93b-5554-46d0-b41d-206ebe9f3d56 Morning Brief for Chip   cron 0 9 * * * @ America/Chicago in 19h     5h ago     ok        isolated  main

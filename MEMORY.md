@@ -1,0 +1,1 @@
+The APPROVED, REPEATABLE METHOD for Google Drive uploads is: gog drive upload <file> --parent <folder_id>. This rule overrides all other GOG upload syntax attempts.

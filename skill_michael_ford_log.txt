@@ -1,0 +1,426 @@
+Starting Drive inventory scan...
+Root ID: 0AICTcJ2yDYGVUk9PVA
+Output will be saved to: ./drive_inventory_1771874918.txt
+Scanning folder ID: 0AICTcJ2yDYGVUk9PVA at depth 0...
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: parse error: Unfinished JSON term at EOF at line 2, column 0
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 5
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 11
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 15
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 10
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: parse error: Unmatched ']' at line 1, column 1
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 7
+jq: error (at <stdin>:1): Cannot index string with string "name"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "mimeType"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: error (at <stdin>:1): Cannot index string with string "id"
+jq: parse error: Expected string key before ':' at line 1, column 14
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+jq: parse error: Unmatched '}' at line 1, column 1
+---------------------------------------
+Finished scan (Depth 1 reached or Queue Empty). Full inventory saved to drive_inventory_1771874918.txt

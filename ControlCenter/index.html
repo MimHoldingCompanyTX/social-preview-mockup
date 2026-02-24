@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Business Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #c5a059;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333;
+            --muted: #888;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 30px 0;
+            background: var(--card-bg);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            padding: 40px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .status-online { background: #e8f5e9; color: #2e7d32; }
+        .status-busy { background: #fff3e0; color: #ef6c00; }
+
+        .action-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .action-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-item:last-child { border-bottom: none; }
+
+        .action-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: #fcfcfc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5f5f5;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 30px;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CONTROL CENTER</h1>
+        <div class="subtitle">Sheila Gutierrez Designs</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Load persistent work log -->
+        <script src="../memory/work_log.js"></script>
+
+        <!-- AGENT STATUS -->
+        <div class="card">
+            <div class="card-title">
+                <span>🐠 ClawdFish Agent</span>
+                <span class="status-badge status-online">Online</span>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-val">2.1.3</div>
+                    <div class="stat-label">Project v.</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val">09:00</div>
+                    <div class="stat-label">Next Brief</div>
+                </div>
+            </div>
+            <div class="action-list" style="margin-top: 20px;">
+                <div class="action-item">
+                    <span>Morning Brief System</span>
+                    <button class="action-btn" onclick="alert('Manual trigger requested via cron...')">Run Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEAD PIPELINE -->
+        <div class="card">
+            <div class="card-title">📈 Lead Pipeline</div>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-val">1</div>
+                    <div class="stat-label">Active Leads</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val">0</div>
+                    <div class="stat-label">New (24h)</div>
+                </div>
+            </div>
+            <div class="action-list" style="margin-top: 20px;">
+                <div class="action-item">
+                    <span>Open Lead Tracker</span>
+                    <button class="action-btn" onclick="window.open('https://docs.google.com/spreadsheets/d/12daic4HfYdfGqZcaYnxIfUqvGEqR5t5E94h1Z1Rp46E')">View Sheet</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEB ASSETS -->
+        <div class="card">
+            <div class="card-title">🌐 Digital Assets</div>
+            <ul class="action-list">
+                <div class="action-item">
+                    <span>Live Website (v3.7.0)</span>
+                    <button class="action-btn" onclick="window.open('https://sheilagutierrezdesigns.com')">Visit</button>
+                </div>
+                <div class="action-item">
+                    <span>Vercel Deployment</span>
+                    <button class="action-btn" onclick="window.open('https://vercel.com')">Dashboard</button>
+                </div>
+                <div class="action-item">
+                    <span>GitHub Repo</span>
+                    <button class="action-btn" onclick="window.open('https://github.com/MimHoldingCompanyTX/Design_Website_Live')">Code</button>
+                </div>
+            </ul>
+        </div>
+
+        <!-- STRATEGY VAULT -->
+        <div class="card">
+            <div class="card-title">📁 Strategy Vault</div>
+            <ul class="action-list">
+                <div class="action-item">
+                    <span>Grok Marketing Blueprint</span>
+                    <button class="action-btn" onclick="window.open('https://drive.google.com/drive/folders/1Y6q3fHs4jXZ_qCzcCzY0LloSzEUY6RJ0')">Open</button>
+                </div>
+                <div class="action-item">
+                    <span>Outreach Toolkit</span>
+                    <button class="action-btn" onclick="window.open('https://drive.google.com/drive/folders/1Y11-2LuwwGKOuNl1yt6bvHN--Q5zQ10N')">Open</button>
+                </div>
+                <div class="action-item">
+                    <span>Client Success Kit</span>
+                    <button class="action-btn" onclick="window.open('https://drive.google.com/drive/folders/1Ajt6QHoqA7e-5Xllz8l-OKwNx0Y942As')">Open</button>
+                </div>
+            </ul>
+        </div>
+
+        
+        <!-- WORK LOG & TIME SUMMARY -->
+        <div class="card">
+            <div class="card-title">🧭 Work Log & Time Summary</div>
+            <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+                <div>
+                    <svg id="work-pie" width="140" height="140" viewBox="0 0 32 32" role="img" aria-label="Work time pie chart"></svg>
+                </div>
+                <div style="flex:1; min-width:260px;">
+                    <ul class="action-list" id="work-list" style="max-height:180px; overflow:auto;">
+                        <!-- Populated by script -->
+                    </ul>
+                </div>
+            </div>
+            <div class="stat-grid" style="margin-top:15px; align-items:center;">
+                <div class="stat-box">
+                    <div class="stat-val" id="work-total">0h</div>
+                    <div class="stat-label">Total Tracked Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="work-7d">0h</div>
+                    <div class="stat-label">Total (last 7 days)</div>
+                </div>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="action-btn" id="add-entry-btn" onclick="try{addEntryHandler()}catch(e){console.error(e);}">Add Entry</button>
+                <button class="action-btn" id="open-log-btn" onclick="try{openLogHandler()}catch(e){console.error(e);}">Open Log File</button>
+                <a class="action-btn" id="download-log-link" href="../memory/work_log.js" download>Download Log</a>
+                <small style="color:#888">Entries persist at memory/work_log.js</small>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 OpenClaw Control Plane | Dallas, TX | 🐠
+    </footer>
+
+    <script>
+        // Build from persisted WORK_LOG (today only, LOCAL date)
+        function todayLocal(){ const d=new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+        const today=todayLocal();
+        const workEntries=(window.WORK_LOG||[]).filter(x=>x.date===today)
+          .map(x=>({ start:`${x.date}T${x.start}:00`, end:`${x.date}T${x.end}:00`, title:x.title, cat:x.cat }))
+          .sort((a,b)=>new Date(a.start)-new Date(b.start));
+
+        function hours(ms){return +(ms/36e5).toFixed(2)}
+        function fmt(d){const dt=new Date(d);return dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+        const listEl=document.getElementById('work-list');
+        let totals={}; let totalMs=0;
+        workEntries.forEach(e=>{const ms=new Date(e.end)-new Date(e.start); totalMs+=ms; totals[e.cat]=(totals[e.cat]||0)+ms;
+          const li=document.createElement('li'); li.className='action-item';
+          li.innerHTML=`<span>${fmt(e.start)}–${fmt(e.end)} · ${e.title}</span><span style=\"color:#888\">${hours(ms)}h</span>`;
+          listEl.appendChild(li);
+        });
+        document.getElementById('work-total').textContent=hours(totalMs)+"h";
+        // Robust 7-day total: build last-7 date list and sum by string match (no Date parsing)
+        (function(){
+          function fmtDate(d){const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`;}
+          const days=[]; const base=new Date(); base.setHours(0,0,0,0);
+          for(let i=0;i<7;i++){ const d=new Date(base); d.setDate(base.getDate()-i); days.push(fmtDate(d)); }
+          const set=new Set(days);
+          let weekMs=0; (window.WORK_LOG||[]).forEach(x=>{ if(x && set.has(x.date)){
+            const s = new Date(`${x.date}T${x.start}:00`); const e = new Date(`${x.date}T${x.end}:00`);
+            const ms = Math.max(0, e - s); weekMs += ms;
+          }});
+          if(weekMs===0 && totalMs>0) weekMs = totalMs; // fallback so it never shows 0 when today has time
+          const el=document.getElementById('work-7d'); if(el) el.textContent = hours(weekMs)+"h";
+        })();
+        const topCat=Object.entries(totals).sort((a,b)=>b[1]-a[1])[0];
+        document.getElementById('work-top').textContent= topCat? `${topCat[0]} (${hours(topCat[1])}h)`: '—';
+        // Draw pie
+        const pie=document.getElementById('work-pie');
+        const sum=Object.values(totals).reduce((a,b)=>a+b,0)||1; let acc=0; const colors=['#c5a059','#2c3e50','#46d6db','#ffb878','#7ae7bf'];
+        let i=0; Object.entries(totals).forEach(([k,v])=>{const f=v/sum; const x=Math.cos(2*Math.PI*(acc+f)); const y=Math.sin(2*Math.PI*(acc+f)); const large=f>0.5?1:0; const d=`M16,16 L16,0 A16,16 0 ${large} 1 ${16+16*x},${16-16*y} z`;
+          const path=document.createElementNS('http://www.w3.org/2000/svg','path'); path.setAttribute('d',d); path.setAttribute('transform',`rotate(${acc*360} 16 16)`); path.setAttribute('fill',colors[i++%colors.length]); path.setAttribute('opacity','0.9'); pie.appendChild(path); acc+=f; });
+
+        // Weekly rollup (last 7 days) under the same card
+        // Weekly rollup using local date math (string compare avoids UTC drift)
+        function ymdNum(d){return Number((d||'').split('-').join(''));}
+        function dateNDaysAgo(n){ const d=new Date(); d.setDate(d.getDate()-n); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+        const minDateStr = dateNDaysAgo(6);
+        // String compare on YYYY-MM-DD avoids any Date() parsing quirks
+        const weekly=(window.WORK_LOG||[]).filter(x=> (x.date||'') >= minDateStr);
+        const catMs={}; let weekMs=0;
+        weekly.forEach(x=>{const ms= (new Date(`${x.date}T${x.end}:00`) - new Date(`${x.date}T${x.start}:00`)); weekMs+=ms; catMs[x.cat]=(catMs[x.cat]||0)+ms;});
+        document.getElementById('work-7d').textContent = hours(weekMs) + 'h';
+        // Add a tiny bar row below the pie
+        const bar=document.createElement('div'); bar.style.marginTop='10px';
+        const max=Math.max(1,...Object.values(catMs));
+        Object.entries(catMs).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>{
+          const row=document.createElement('div'); row.style.display='flex'; row.style.alignItems='center'; row.style.gap='8px'; row.style.margin='4px 0';
+          const label=document.createElement('div'); label.style.width='120px'; label.style.fontSize='12px'; label.textContent=k;
+          const barInner=document.createElement('div'); barInner.style.flex='1'; barInner.style.height='6px'; barInner.style.background='#eee';
+          const fill=document.createElement('div'); fill.style.width=(v/max*100)+'%'; fill.style.height='6px'; fill.style.background='#c5a059';
+          barInner.appendChild(fill); const val=document.createElement('div'); val.style.fontSize='12px'; val.style.color='#888'; val.textContent=hours(v)+'h';
+          row.appendChild(label); row.appendChild(barInner); row.appendChild(val); bar.appendChild(row);
+        });
+        document.querySelector('.card .stat-grid').after(bar);
+
+        // Add Entry button: try auto-save; on failure, download updated log immediately
+        async function addEntryHandler(){
+          const d = prompt('Date YYYY-MM-DD', today);
+          if(!d) return;
+          const start = prompt('Start HH:MM', '09:00'); if(!start) return;
+          const end = prompt('End HH:MM', '10:00'); if(!end) return;
+          const title = prompt('Title', 'Work item'); if(!title) return;
+          const cat = prompt('Category (Web/Content/Infra/Debug/Deploy/Admin)', 'Web') || 'Web';
+
+          const arr = (window.WORK_LOG||[]).slice();
+          arr.push({date:d,start,end,title,cat});
+          const payload = '// Persistent Work Log (edit-safe). New entries append at end.\n'
+            + '// Schema: { date: "YYYY-MM-DD", start: "HH:MM", end: "HH:MM", title: string, cat: string }\n'
+            + 'window.WORK_LOG = ' + JSON.stringify(arr, null, 2) + ';\n';
+
+          let saved = false;
+          try {
+            const res = await fetch('/.openclaw/save-worklog', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({date:d,start,end,title,cat}) });
+            if(res && res.ok) saved = true;
+          } catch(_) {}
+
+          if(saved){
+            alert('Saved. Refresh to see the update.');
+          } else {
+            const blob = new Blob([payload], {type:'application/javascript'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download='work_log.js'; a.click();
+            URL.revokeObjectURL(url);
+            alert('Auto-save unavailable here. Downloaded updated work_log.js — place it in memory/ and refresh.');
+          }
+        }
+        
+        // Open log: render current WORK_LOG to a new tab via data URL (works from file://)
+        function openLogHandler(){
+          const obj = { WORK_LOG: (window.WORK_LOG||[]) };
+          const text = '// View-only snapshot generated from the Control Center\n' + 'window.WORK_LOG = ' + JSON.stringify(obj.WORK_LOG, null, 2) + ';\n';
+          const blob = new Blob([text], {type:'application/javascript'});
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          setTimeout(()=>URL.revokeObjectURL(url), 5000);
+        }
+
+    </script>
+
+</body>
+</html>

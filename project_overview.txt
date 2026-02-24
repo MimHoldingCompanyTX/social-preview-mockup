@@ -1,0 +1,11 @@
+# Design Business Project Overview
+
+This document tracks the core pillars of the interior design venture for Sheila and Amy.
+
+1. Brand Strategy: "Timeless Elegance. Proven Execution." leveraging Sheila's legal background in Venezuela.
+2. Service Offerings:
+   - The 2-Hour Spark ($199): High-value consultation focused on existing assets.
+   - The Mood Board ($399): Visual blueprint and detailed budget grounding.
+3. Digital Presence: Live Vercel website (v2.2.4) with automated GitHub deployment.
+
+Status: Google Docs Integration Verified via File Upload.
