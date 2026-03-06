@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface InitialContactData {
   name: string;
@@ -41,7 +41,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [lastSavedData, setLastSavedData] = useState<InitialContactData | null>(null);
   
   const [formData, setFormData] = useState<InitialContactData>({
     name: '',
@@ -51,28 +50,12 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     narrative: '',
   });
 
-  // Track unsaved changes
-  const hasUnsavedChanges = useMemo(() => {
-    if (!lastSavedData) return false;
-    return (
-      formData.name !== lastSavedData.name ||
-      JSON.stringify(formData.address) !== JSON.stringify(lastSavedData.address) ||
-      formData.email !== lastSavedData.email ||
-      formData.phone !== lastSavedData.phone ||
-      formData.narrative !== lastSavedData.narrative
-    );
-  }, [formData, lastSavedData]);
-
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -105,7 +88,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           }
           console.log('Loaded existing data:', loadedData);
           setFormData(loadedData);
-          setLastSavedData(loadedData);
         } else {
           // No existing data, set client name if provided
           const defaultData = {
@@ -117,7 +99,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           };
           console.log('No existing data, setting defaults:', defaultData);
           setFormData(defaultData);
-          setLastSavedData(defaultData);
         }
       } catch (err) {
         console.error('Error loading initial contact data:', err);
@@ -132,12 +113,13 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     }
   }, [folderId, clientName]);
 
-  const saveData = useCallback(async () => {
-    console.log('saveData called', { folderId, formData });
+  const handleSave = useCallback(async () => {
+    console.log('handleSave called', { folderId, formData });
     if (!isMountedRef.current) return;
     
     setSaving(true);
     setError(null);
+    setSaveSuccess(false);
     
     try {
       // Prepare data for API (remove phone formatting before saving)
@@ -162,12 +144,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       }
       
       console.log('POST request successful');
-      // Update last saved data (with formatted phone for UI)
-      const savedWithFormattedPhone = {
-        ...formData,
-        phone: formatPhoneNumber(dataToSave.phone) // Ensure consistent formatting
-      };
-      setLastSavedData(savedWithFormattedPhone);
       setSaveSuccess(true);
       
       // Hide success message after 3 seconds
@@ -184,33 +160,10 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     }
   }, [formData, folderId]);
 
-  // Auto-save when form data changes (with debounce)
-  useEffect(() => {
-    console.log('Auto-save effect running', { lastSavedData: !!lastSavedData, loading });
-    if (!lastSavedData || loading) return;
-
-    console.log('Change detection:', { hasUnsavedChanges, formName: formData.name, savedName: lastSavedData.name });
-    if (!hasUnsavedChanges) return;
-
-    // Clear existing timeout
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-
-    console.log('Setting auto-save timeout (1s)');
-    // Set new timeout for auto-save (1 second delay)
-    autoSaveTimeoutRef.current = setTimeout(() => {
-      console.log('Auto-save timeout triggered, calling saveData');
-      saveData();
-    }, 1000);
-
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        console.log('Clearing auto-save timeout');
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, [formData, lastSavedData, loading, saveData]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSave();
+  };
 
   const handleInputChange = (field: keyof InitialContactData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -229,34 +182,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     setFormData(prev => ({ ...prev, phone: formatted }));
   };
 
-  // Force save on blur (immediate save when user leaves a field)
-  const handleFieldBlur = () => {
-    console.log('Field blur triggered');
-    if (!lastSavedData) {
-      console.log('No lastSavedData, skipping');
-      return;
-    }
-    
-    const hasChanges = 
-      formData.name !== lastSavedData.name ||
-      JSON.stringify(formData.address) !== JSON.stringify(lastSavedData.address) ||
-      formData.email !== lastSavedData.email ||
-      formData.phone !== lastSavedData.phone ||
-      formData.narrative !== lastSavedData.narrative;
-
-    console.log('Blur change detection:', { hasChanges, saving });
-    if (hasChanges && !saving) {
-      console.log('Changes detected, saving immediately');
-      // Clear any pending debounced save
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-      saveData();
-    } else {
-      console.log('No changes or already saving');
-    }
-  };
-
   if (loading) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -268,14 +193,31 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
 
   return (
     <div className="initial-contact-view bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-      {/* Header */}
+      {/* Header with save button */}
       <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-        <h3 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">Initial Contact Information</h3>
-        <p className="text-sm text-[#2c3e50] mt-1">Capture client details for this project. Changes are saved automatically.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">Initial Contact Information</h3>
+            <p className="text-sm text-[#2c3e50] mt-1">Capture client details for this project.</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="px-4 py-2 bg-[#c5a059] text-white font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {saving ? (
+              <>
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2"></span>
+                Saving...
+              </>
+            ) : 'Save Contact Info'}
+          </button>
+        </div>
       </div>
 
-      {/* Form - No submit button, auto-save only */}
-      <div className="p-4 md:p-6 space-y-6">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-6">
         {error && (
           <div className="rounded-lg bg-red-50 border border-red-200 p-3">
             <div className="flex items-start">
@@ -308,19 +250,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           </div>
         )}
 
-        {saving && (
-          <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-blue-800">Saving changes...</p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Name */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-[#2c3e50] mb-1">
@@ -332,7 +261,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
             required
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-            onBlur={handleFieldBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#c5a059] focus:border-transparent text-[#2c3e50] bg-white"
             placeholder="Full name"
           />
@@ -350,7 +278,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
                 type="text"
                 value={formData.address[index] || ''}
                 onChange={(e) => handleAddressLineChange(index, e.target.value)}
-                onBlur={handleFieldBlur}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#c5a059] focus:border-transparent text-[#2c3e50] bg-white"
                 placeholder={`Address line ${index + 1}${index === 0 ? ' (optional)' : ''}`}
               />
@@ -369,7 +296,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
             id="email"
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            onBlur={handleFieldBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#c5a059] focus:border-transparent text-[#2c3e50] bg-white"
             placeholder="client@example.com"
           />
@@ -385,7 +311,6 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
             id="phone"
             value={formData.phone}
             onChange={(e) => handlePhoneChange(e.target.value)}
-            onBlur={handleFieldBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#c5a059] focus:border-transparent text-[#2c3e50] bg-white"
             placeholder="(123) 456-7890"
             maxLength={14} // (123) 456-7890 is 14 chars
@@ -403,33 +328,19 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
             rows={5}
             value={formData.narrative}
             onChange={(e) => handleInputChange('narrative', e.target.value)}
-            onBlur={handleFieldBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#c5a059] focus:border-transparent text-[#2c3e50] bg-white"
             placeholder="Notes about how the client found you, initial conversation, project scope, etc."
           />
         </div>
 
-        {/* Auto-save status */}
+        {/* Form note */}
         <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-xs text-gray-500">
-              {saving ? (
-                <span className="flex items-center">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500 mr-1"></div>
-                  Saving changes...
-                </span>
-              ) : saveSuccess ? (
-                <span className="text-green-600">✓ All changes saved</span>
-              ) : (
-                <span>Changes are saved automatically</span>
-              )}
-            </div>
-            <div className="text-xs text-gray-500">
-              <code className="bg-gray-100 px-1 py-0.5 rounded">initial_contact.json</code>
-            </div>
-          </div>
+          <p className="text-xs text-gray-500 text-center">
+            Click <strong>Save Contact Info</strong> at the top to save changes to{' '}
+            <code className="bg-gray-100 px-1 py-0.5 rounded">initial_contact.json</code>.
+          </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

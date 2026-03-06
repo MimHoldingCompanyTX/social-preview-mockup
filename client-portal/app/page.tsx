@@ -2283,11 +2283,6 @@ export default function ClientPortalHome() {
               // Check for Initial Contact step first
               selectedStep?.stepName === 'Initial Contact' && currentFolderId === selectedStep.id ? (
                 <div className="flex-1 flex flex-col">
-                  <div className="mb-2">
-                    <h2 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">
-                      {folderPath.length > 1 ? folderPath[folderPath.length - 1].name : selectedStep?.stepName}
-                    </h2>
-                  </div>
                   <InitialContactView 
                     folderId={currentFolderId} 
                     clientName={selectedProject?.clientName}
