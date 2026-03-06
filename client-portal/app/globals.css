@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f9fafb;
+  --foreground: #2c3e50;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improve touch targets on mobile */
+button, 
+a {
+  @apply touch-manipulation;
+}
+
+/* Better scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default focus styles for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
