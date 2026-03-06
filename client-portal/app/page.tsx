@@ -2117,21 +2117,34 @@ export default function ClientPortalHome() {
               
               {/* Save button for Initial Contact step */}
               {selectedStep?.stepName === 'Initial Contact' && currentFolderId === selectedStep.id && (
-                <button
-                  onClick={() => {
-                    console.log('Initial Contact save button clicked', { selectedStep, currentFolderId, initialContactSaving });
-                    window.dispatchEvent(new CustomEvent('initial-contact-save-click'));
-                  }}
-                  disabled={initialContactSaving}
-                  className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {initialContactSaving ? (
-                    <>
-                      <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent mr-1"></span>
-                      Saving...
-                    </>
-                  ) : 'Save'}
-                </button>
+                <>
+                  {console.log('Save button condition met:', { 
+                    stepName: selectedStep?.stepName, 
+                    currentFolderId, 
+                    selectedStepId: selectedStep?.id,
+                    condition: currentFolderId === selectedStep.id
+                  })}
+                  <button
+                    onClick={() => {
+                      console.log('Initial Contact save button clicked', { 
+                        selectedStepId: selectedStep?.id, 
+                        currentFolderId, 
+                        initialContactSaving,
+                        stepName: selectedStep?.stepName 
+                      });
+                      window.dispatchEvent(new CustomEvent('initial-contact-save-click'));
+                    }}
+                    disabled={initialContactSaving}
+                    className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {initialContactSaving ? (
+                      <>
+                        <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent mr-1"></span>
+                        Saving...
+                      </>
+                    ) : 'Save'}
+                  </button>
+                </>
               )}
             </div>
           </div>
