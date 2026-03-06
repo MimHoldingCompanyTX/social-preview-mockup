@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     }
     
     // Validate required fields
-    if (!data.name || typeof data.name !== 'string') {
+    if (typeof data.name !== 'string') {
       return NextResponse.json(
         { error: 'Invalid or missing name field' },
         { status: 400 }

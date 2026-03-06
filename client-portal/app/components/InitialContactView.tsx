@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 interface InitialContactData {
   name: string;
@@ -51,6 +51,18 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     narrative: '',
   });
 
+  // Track unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    if (!lastSavedData) return false;
+    return (
+      formData.name !== lastSavedData.name ||
+      JSON.stringify(formData.address) !== JSON.stringify(lastSavedData.address) ||
+      formData.email !== lastSavedData.email ||
+      formData.phone !== lastSavedData.phone ||
+      formData.narrative !== lastSavedData.narrative
+    );
+  }, [formData, lastSavedData]);
+
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
 
@@ -91,6 +103,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           if (loadedData.phone && /^\d{10}$/.test(loadedData.phone)) {
             loadedData.phone = formatPhoneNumber(loadedData.phone);
           }
+          console.log('Loaded existing data:', loadedData);
           setFormData(loadedData);
           setLastSavedData(loadedData);
         } else {
@@ -102,6 +115,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
             phone: '',
             narrative: '',
           };
+          console.log('No existing data, setting defaults:', defaultData);
           setFormData(defaultData);
           setLastSavedData(defaultData);
         }
@@ -118,38 +132,8 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     }
   }, [folderId, clientName]);
 
-  // Auto-save when form data changes (with debounce)
-  useEffect(() => {
-    if (!lastSavedData || loading) return;
-
-    // Check if form data has actually changed
-    const hasChanges = 
-      formData.name !== lastSavedData.name ||
-      JSON.stringify(formData.address) !== JSON.stringify(lastSavedData.address) ||
-      formData.email !== lastSavedData.email ||
-      formData.phone !== lastSavedData.phone ||
-      formData.narrative !== lastSavedData.narrative;
-
-    if (!hasChanges) return;
-
-    // Clear existing timeout
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-
-    // Set new timeout for auto-save (1 second delay)
-    autoSaveTimeoutRef.current = setTimeout(() => {
-      saveData();
-    }, 1000);
-
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, [formData, lastSavedData, loading]);
-
   const saveData = useCallback(async () => {
+    console.log('saveData called', { folderId, formData });
     if (!isMountedRef.current) return;
     
     setSaving(true);
@@ -161,6 +145,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
         ...formData,
         phone: parsePhoneNumber(formData.phone)
       };
+      console.log('Data to save:', dataToSave);
       
       const response = await fetch('/api/project/initial-contact', {
         method: 'POST',
@@ -176,6 +161,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
         throw new Error(errorData.error || `Failed to save: ${response.status}`);
       }
       
+      console.log('POST request successful');
       // Update last saved data (with formatted phone for UI)
       const savedWithFormattedPhone = {
         ...formData,
@@ -198,6 +184,34 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     }
   }, [formData, folderId]);
 
+  // Auto-save when form data changes (with debounce)
+  useEffect(() => {
+    console.log('Auto-save effect running', { lastSavedData: !!lastSavedData, loading });
+    if (!lastSavedData || loading) return;
+
+    console.log('Change detection:', { hasUnsavedChanges, formName: formData.name, savedName: lastSavedData.name });
+    if (!hasUnsavedChanges) return;
+
+    // Clear existing timeout
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+
+    console.log('Setting auto-save timeout (1s)');
+    // Set new timeout for auto-save (1 second delay)
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      console.log('Auto-save timeout triggered, calling saveData');
+      saveData();
+    }, 1000);
+
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        console.log('Clearing auto-save timeout');
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, [formData, lastSavedData, loading, saveData]);
+
   const handleInputChange = (field: keyof InitialContactData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -217,7 +231,11 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
 
   // Force save on blur (immediate save when user leaves a field)
   const handleFieldBlur = () => {
-    if (!lastSavedData) return;
+    console.log('Field blur triggered');
+    if (!lastSavedData) {
+      console.log('No lastSavedData, skipping');
+      return;
+    }
     
     const hasChanges = 
       formData.name !== lastSavedData.name ||
@@ -226,12 +244,16 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       formData.phone !== lastSavedData.phone ||
       formData.narrative !== lastSavedData.narrative;
 
+    console.log('Blur change detection:', { hasChanges, saving });
     if (hasChanges && !saving) {
+      console.log('Changes detected, saving immediately');
       // Clear any pending debounced save
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current);
       }
       saveData();
+    } else {
+      console.log('No changes or already saving');
     }
   };
 
