@@ -192,26 +192,22 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
   }
 
   return (
-    <div className="initial-contact-view bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className="initial-contact-view bg-white rounded-lg border border-gray-200 shadow-sm overflow-auto">
       {/* Header with save button */}
-      <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">Initial Contact Information</h3>
-            <p className="text-sm text-[#2c3e50] mt-1">Capture client details for this project.</p>
-          </div>
+      <div className="sticky top-0 z-10 border-b border-gray-200 bg-gray-50 px-4 py-2">
+        <div className="flex items-center justify-end">
           <button
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 bg-[#c5a059] text-white font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
               <>
-                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2"></span>
+                <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent mr-1"></span>
                 Saving...
               </>
-            ) : 'Save Contact Info'}
+            ) : 'Save'}
           </button>
         </div>
       </div>
@@ -333,13 +329,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           />
         </div>
 
-        {/* Form note */}
-        <div className="pt-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">
-            Click <strong>Save Contact Info</strong> at the top to save changes to{' '}
-            <code className="bg-gray-100 px-1 py-0.5 rounded">initial_contact.json</code>.
-          </p>
-        </div>
+        
       </form>
     </div>
   );
