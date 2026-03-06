@@ -46,6 +46,9 @@ coverage/
 *-backup-*
 backup/
 *.bak
+*.backup
+*.stark-backup
+*-backup
 
 # Client portal specific
 client-portal/.next/
@@ -81,3 +84,10 @@ exports/
 # Temporary scripts
 temp_*
 test_*
+
+# Separate git repositories within workspace
+Design_Website_Live/
+.backup/
+design-mockup/
+social-preview/
+client_agreement_*.md
