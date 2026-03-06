@@ -131,6 +131,8 @@ export default function ClientPortalHome() {
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   // Textarea readonly state (for preventing autofill popups)
   const [isTextareaReadonly, setIsTextareaReadonly] = useState(true);
+  // Editing mode for notes (to prevent autofill popups)
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
 
   // Inline gallery viewing state
   const [viewingGalleryInline, setViewingGalleryInline] = useState(false);
@@ -1141,8 +1143,8 @@ export default function ClientPortalHome() {
 
   // Handle inline notes textarea focus
   const handleInlineNotesFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    // Remove readonly attribute to prevent autofill popups (Safari workaround)
-    setIsTextareaReadonly(false);
+    // Note: readonly is now controlled by Edit/Save button to prevent autofill popups
+    // setIsTextareaReadonly(false); // Removed - now controlled by isEditingNotes state
     
     // Clear placeholder on focus if it exists
     if (inlineNotesContent.includes('Add your notes here...')) {
@@ -2029,6 +2031,26 @@ export default function ClientPortalHome() {
                 </button>
               </div>
               <div className="flex items-center gap-2">
+                {/* Edit/Save button */}
+                <button
+                  onClick={() => {
+                    if (isEditingNotes) {
+                      // Save and exit editing mode
+                      autoSaveInlineNotes().catch(err => {
+                        console.error('Save failed:', err);
+                      });
+                      setIsEditingNotes(false);
+                      setIsTextareaReadonly(true);
+                    } else {
+                      // Enter editing mode
+                      setIsEditingNotes(true);
+                      setIsTextareaReadonly(false);
+                    }
+                  }}
+                  className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isEditingNotes ? 'Save' : 'Edit'}
+                </button>
                 {/* TTS buttons for markdown/text files */}
                 {inlineNotesFile && (inlineNotesFile.name.toLowerCase().endsWith('.md') || inlineNotesFile.mimeType === 'text/markdown' || inlineNotesFile.mimeType === 'text/plain') && inlineNotesContent.trim().length > 0 && (
                   <>
