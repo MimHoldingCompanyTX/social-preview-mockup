@@ -1,0 +1,1 @@
+# Top 3 Business Rocks (Prioritized for 2026-02-24)\n1. Upload Sofia Ramirez Client Agreement to Drive via GOG.\n2. Monitor for new photography assets from Sheila.\n3. Begin drafting outreach templates for \"Founding 5\" campaign.\n\n---\n_This file was last updated by automated process._
