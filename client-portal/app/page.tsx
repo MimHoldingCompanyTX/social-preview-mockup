@@ -2332,7 +2332,7 @@ export default function ClientPortalHome() {
               )
             )}
           </div>
-        )) : selectedProject ? (
+         ) : selectedProject ? (
           // Selected Project Workflow View
           <div>
             <div className="mb-6">
