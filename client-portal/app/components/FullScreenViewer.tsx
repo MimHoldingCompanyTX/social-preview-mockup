@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 
 // Type declaration for Speech Recognition API
@@ -653,10 +655,14 @@ export default function FullScreenViewer({
                   </div>
                 </div>
               ) : (
-                <div className="h-full w-full max-w-4xl overflow-auto p-8 bg-white rounded-lg">
-                  <pre className="whitespace-pre-wrap font-mono text-sm text-[#2c3e50]">
-                    {translatedContent && displayLanguage === 'es' ? translatedContent : previewData.content}
-                  </pre>
+                <div className="h-full w-full max-w-4xl overflow-auto p-8 bg-white rounded-lg prose prose-sm max-w-none">
+                  {previewData.content.trim() ? (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {translatedContent && displayLanguage === 'es' ? translatedContent : previewData.content}
+                    </ReactMarkdown>
+                  ) : (
+                    <p className="text-gray-400 italic">No content</p>
+                  )}
                 </div>
               )
             ) : previewData.type === 'text' ? (
@@ -686,9 +692,13 @@ export default function FullScreenViewer({
                 </div>
               ) : (
                 <div className="h-full w-full max-w-4xl overflow-auto p-8 bg-white rounded-lg">
-                  <pre className="whitespace-pre-wrap font-mono text-sm text-[#2c3e50]">
-                    {translatedContent && displayLanguage === 'es' ? translatedContent : previewData.content}
-                  </pre>
+                  {previewData.content.trim() ? (
+                    <pre className="whitespace-pre-wrap font-mono text-sm text-[#2c3e50]">
+                      {translatedContent && displayLanguage === 'es' ? translatedContent : previewData.content}
+                    </pre>
+                  ) : (
+                    <p className="text-gray-400 italic">No content</p>
+                  )}
                 </div>
               )
             ) : isEmbeddable ? (

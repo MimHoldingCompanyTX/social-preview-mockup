@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import GalleryView from './components/GalleryView';
 import FullScreenViewer from './components/FullScreenViewer';
@@ -101,6 +103,8 @@ export default function ClientPortalHome() {
   // Initial Contact save state
   const [initialContactSaving, setInitialContactSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const notesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const notesContainerRef = useRef<HTMLDivElement>(null);
   // TTS refs
   const voicesLoadedRef = useRef(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -1209,6 +1213,43 @@ export default function ClientPortalHome() {
     }
   };
 
+  // Start editing notes - add timestamp and focus
+  const handleStartEditing = () => {
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+    
+    // Add blank line and timestamp if content exists
+    let newContent = inlineNotesContent.trim();
+    if (newContent.length > 0) {
+      newContent = `${newContent}\n\n---\n**Edit started:** ${formattedDate}\n`;
+    } else {
+      newContent = `**Note started:** ${formattedDate}\n\n`;
+    }
+    
+    setInlineNotesContent(newContent);
+    setIsEditingNotes(true);
+    setIsTextareaReadonly(false);
+    
+    // Focus textarea after state update (use setTimeout to ensure DOM update)
+    setTimeout(() => {
+      if (notesTextareaRef.current) {
+        notesTextareaRef.current.focus();
+        // Move cursor to end
+        notesTextareaRef.current.selectionStart = newContent.length;
+        notesTextareaRef.current.selectionEnd = newContent.length;
+        // Scroll to bottom
+        notesTextareaRef.current.scrollTop = notesTextareaRef.current.scrollHeight;
+      }
+    }, 50);
+  };
+
   // Create user notes
   const createUserNotes = useCallback(async () => {
     if (!selectedStep) return;
@@ -2075,10 +2116,14 @@ export default function ClientPortalHome() {
                       });
                       setIsEditingNotes(false);
                       setIsTextareaReadonly(true);
+                      // Scroll container to bottom after save
+                      setTimeout(() => {
+                        if (notesContainerRef.current) {
+                          notesContainerRef.current.scrollTop = notesContainerRef.current.scrollHeight;
+                        }
+                      }, 100);
                     } else {
-                      // Enter editing mode
-                      setIsEditingNotes(true);
-                      setIsTextareaReadonly(false);
+                      handleStartEditing();
                     }
                   }}
                   className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -2294,27 +2339,40 @@ export default function ClientPortalHome() {
               </div>
               
               {/* Editor Content */}
-              <div className="flex-1 flex flex-col">
-                <textarea
-                  value={inlineNotesContent}
-                  onChange={handleInlineNotesChange}
-                  onFocus={handleInlineNotesFocus}
-                  onBlur={handleInlineNotesBlur}
-                  className="flex-1 w-full font-mono text-sm p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#c5a059] focus:border-transparent resize-none min-h-[calc(100vh-300px)] text-[#2c3e50]"
-                  placeholder="Start typing your notes here..."
-                  autoFocus
-                  autoComplete="new-password"
-                  inputMode="text"
-                  data-1p-ignore
-                  spellCheck="false"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  data-lpignore="true"
-                  readOnly={isTextareaReadonly}
-                  aria-label="Notes editor"
-                  id="notes-editor-spec"
-                  name="notes-editor"
-                />
+              <div ref={notesContainerRef} className={`flex-1 flex flex-col ${isEditingNotes ? 'min-h-[300px]' : ''}`}>
+                {isEditingNotes ? (
+                  <textarea
+                    ref={notesTextareaRef}
+                    value={inlineNotesContent}
+                    onChange={handleInlineNotesChange}
+                    onFocus={handleInlineNotesFocus}
+                    onBlur={handleInlineNotesBlur}
+                    className="flex-1 w-full font-mono text-sm p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#c5a059] focus:border-transparent resize-none min-h-[calc(100vh-400px)] text-[#2c3e50]"
+                    placeholder="Start typing your notes here..."
+                    autoFocus
+                    autoComplete="new-password"
+                    inputMode="text"
+                    data-1p-ignore
+                    spellCheck="false"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    data-lpignore="true"
+                    readOnly={false}
+                    aria-label="Notes editor"
+                    id="notes-editor-spec"
+                    name="notes-editor"
+                  />
+                ) : (
+                  <div className="flex-1 w-full p-4 border border-gray-300 rounded-md overflow-auto prose prose-sm max-w-none text-[#2c3e50]">
+                    {inlineNotesContent.trim() ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {inlineNotesContent}
+                      </ReactMarkdown>
+                    ) : (
+                      <p className="text-gray-400 italic">No notes yet. Click Edit to add notes.</p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ) : viewingGalleryInline ? (
