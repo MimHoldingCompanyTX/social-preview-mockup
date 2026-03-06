@@ -958,6 +958,50 @@ export default function ClientPortalHome() {
     }
   };
 
+  // Helper function to convert filenames to friendly display names
+  const getFriendlyFileName = (fileName: string): string => {
+    if (!fileName) return '';
+    
+    // Remove file extension
+    let name = fileName.replace(/\.[^/.]+$/, '');
+    
+    // Replace underscores and dashes with spaces
+    name = name.replace(/[_-]/g, ' ');
+    
+    // Handle known patterns
+    if (name.toLowerCase().includes('user notes')) {
+      return 'User Notes';
+    }
+    if (name.toLowerCase().includes('system notes')) {
+      return 'System Notes';
+    }
+    if (name.toLowerCase().includes('initial contact')) {
+      return 'Initial Contact';
+    }
+    if (name.toLowerCase().includes('moodboard') && name.toLowerCase().includes('spec')) {
+      const match = name.match(/moodboard\s*(\d+)/i);
+      if (match && match[1]) {
+        return `Iteration ${match[1]} Spec`;
+      }
+      return 'Iteration Spec';
+    }
+    if (name.toLowerCase().includes('moodboard')) {
+      const match = name.match(/moodboard\s*(\d+)/i);
+      if (match && match[1]) {
+        return `Iteration ${match[1]}`;
+      }
+      return 'Moodboard';
+    }
+    
+    // Capitalize first letter of each word
+    name = name.split(' ').map(word => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
+    
+    return name;
+  };
+
   // Auto-save inline notes (doesn't close editor)
   const autoSaveInlineNotes = async () => {
     if (!inlineNotesFile) return;
@@ -2017,17 +2061,7 @@ export default function ClientPortalHome() {
                   className="text-md font-semibold text-[#2c3e50] truncate hover:text-[#c5a059] hover:underline focus:outline-none"
                   title="Click to go back"
                 >
-                  {(() => {
-                    // Extract iteration number from spec filename
-                    // Pattern: moodboard_X_spec.md -> Iteration X
-                    if (inlineNotesFile?.name) {
-                      const match = inlineNotesFile.name.match(/moodboard_(\d+)_spec\.md/i);
-                      if (match && match[1]) {
-                        return `Iteration ${match[1]}`;
-                      }
-                    }
-                    return inlineNotesFile?.name || 'Notes';
-                  })()}
+                  {inlineNotesFile ? getFriendlyFileName(inlineNotesFile.name) : 'Notes'}
                 </button>
               </div>
               <div className="flex items-center gap-2">
@@ -2202,17 +2236,7 @@ export default function ClientPortalHome() {
                     className="text-md font-semibold text-gray-900 truncate hover:text-gray-700 hover:underline focus:outline-none"
                     title="Click to go back"
                   >
-                    {(() => {
-                      // Extract iteration number from spec filename
-                      // Pattern: moodboard_X_spec.md -> Iteration X
-                      if (inlineNotesFile?.name) {
-                        const match = inlineNotesFile.name.match(/moodboard_(\d+)_spec\.md/i);
-                        if (match && match[1]) {
-                          return `Iteration ${match[1]}`;
-                        }
-                      }
-                      return inlineNotesFile?.name || 'Notes';
-                    })()}
+                    {inlineNotesFile ? getFriendlyFileName(inlineNotesFile.name) : 'Notes'}
                   </button>
                 </div>
                 <div className="flex items-center gap-2">

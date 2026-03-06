@@ -52,6 +52,49 @@ export default function GalleryView({
     });
   };
 
+  const getFriendlyFileName = (fileName: string): string => {
+    if (!fileName) return '';
+    
+    // Remove file extension
+    let name = fileName.replace(/\.[^/.]+$/, '');
+    
+    // Replace underscores and dashes with spaces
+    name = name.replace(/[_-]/g, ' ');
+    
+    // Handle known patterns
+    if (name.toLowerCase().includes('user notes')) {
+      return 'User Notes';
+    }
+    if (name.toLowerCase().includes('system notes')) {
+      return 'System Notes';
+    }
+    if (name.toLowerCase().includes('initial contact')) {
+      return 'Initial Contact';
+    }
+    if (name.toLowerCase().includes('moodboard') && name.toLowerCase().includes('spec')) {
+      const match = name.match(/moodboard\s*(\d+)/i);
+      if (match && match[1]) {
+        return `Iteration ${match[1]} Spec`;
+      }
+      return 'Iteration Spec';
+    }
+    if (name.toLowerCase().includes('moodboard')) {
+      const match = name.match(/moodboard\s*(\d+)/i);
+      if (match && match[1]) {
+        return `Iteration ${match[1]}`;
+      }
+      return 'Moodboard';
+    }
+    
+    // Capitalize first letter of each word
+    name = name.split(' ').map(word => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
+    
+    return name;
+  };
+
   return (
     <div className="gallery-view">
       {/* Thumbnail grid - iPhone Photos style */}
@@ -80,7 +123,7 @@ export default function GalleryView({
                 <div className="w-full h-full flex flex-col items-center justify-center p-4">
                   <div className="text-3xl mb-2">{getIcon(item)}</div>
                   <div className="text-xs text-center text-[#2c3e50] truncate w-full px-1">
-                    {item.name.split('.').slice(0, -1).join('.') || item.name}
+                    {getFriendlyFileName(item.name)}
                   </div>
                 </div>
               )}

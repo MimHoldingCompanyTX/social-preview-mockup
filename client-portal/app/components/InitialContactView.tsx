@@ -37,6 +37,7 @@ function parsePhoneNumber(formatted: string): string {
 }
 
 export default function InitialContactView({ folderId, clientName }: InitialContactViewProps) {
+  console.log('InitialContactView rendered with folderId:', folderId, 'clientName:', clientName);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +53,9 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
 
   const isMountedRef = useRef(true);
 
-  // Cleanup on unmount
+  // Set mounted ref and cleanup on unmount
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
@@ -65,7 +67,9 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       setLoading(true);
       setError(null);
       try {
+        console.log('Fetching initial contact data for folderId:', folderId);
         const response = await fetch(`/api/project/initial-contact?folderId=${folderId}`);
+        console.log('Response status:', response.status);
         if (!response.ok) {
           throw new Error(`Failed to load initial contact data: ${response.status}`);
         }
@@ -74,7 +78,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
           // Merge existing data with defaults
           const existing = data.data;
           const loadedData = {
-            name: existing.name || '',
+            name: existing.name || clientName || '', // Prioritize existing, then clientName prop, then empty string
             address: Array.isArray(existing.address) ? 
               [...existing.address, '', '', ''].slice(0, 3) : 
               ['', '', ''],
@@ -114,10 +118,17 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
   }, [folderId, clientName]);
 
   const handleSave = useCallback(async () => {
-    console.log('handleSave called', { folderId, formData });
-    if (!isMountedRef.current) return;
+    console.log('handleSave called', { folderId, formData, isMounted: isMountedRef.current });
+    console.log('isMountedRef.current value:', isMountedRef.current);
     
+    if (!isMountedRef.current) {
+      console.warn('Component not mounted, aborting save - this is likely a timing issue');
+      return;
+    }
+    
+    console.log('Component is mounted, proceeding with save...');
     // Notify header that saving has started
+    console.log('Dispatching saving-state event: saving=true');
     window.dispatchEvent(new CustomEvent('initial-contact-saving-state', { detail: { saving: true } }));
     
     setSaving(true);
@@ -125,6 +136,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     setSaveSuccess(false);
     
     try {
+      console.log('Entering try block');
       // Prepare data for API (remove phone formatting before saving)
       const dataToSave = {
         ...formData,
@@ -168,6 +180,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       console.error('Error saving initial contact data:', err);
       setError(err instanceof Error ? err.message : 'Failed to save data');
     } finally {
+      console.log('Save operation completed, setting saving=false');
       setSaving(false);
       // Notify header that saving has finished
       window.dispatchEvent(new CustomEvent('initial-contact-saving-state', { detail: { saving: false } }));
