@@ -655,7 +655,7 @@ export default function FullScreenViewer({
                   </div>
                 </div>
               ) : (
-                <div className="h-full w-full max-w-4xl overflow-auto p-8 bg-white rounded-lg prose prose-sm max-w-none">
+                <div className="h-full w-full max-w-4xl overflow-auto p-8 bg-white rounded-lg">
                   {previewData.content.trim() ? (
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {translatedContent && displayLanguage === 'es' ? translatedContent : previewData.content}
