@@ -1,4 +1,6 @@
 (() => {
+  try {
+    console.log('Social preview script loaded');
   let lang = 'EN';
   const btn = document.getElementById('langToggle');
   const setLang = (L) => {
@@ -16,61 +18,35 @@
   // Initialize captions
   setLang('EN');
 
-  // Touch support: tap to toggle overlay
+  // Touch support: tap to toggle overlay (skip slider tiles)
   document.querySelectorAll('.tile').forEach(tile => {
     tile.addEventListener('click', (e) => {
       if (e.target.closest('a,button')) return;
+      if (tile.classList.contains('slider')) return; // slider tiles have separate click behavior
       tile.classList.toggle('show');
     });
   });
-  // Before/After slider logic: clip the BEFORE image based on range value
+  // Before/After slider logic: adjust width based on range value
   document.querySelectorAll('.tile.slider .ba').forEach(ba => {
     const before = ba.querySelector('.before');
     const range = ba.querySelector('input[type=range]');
     const update = () => {
       const v = Number(range.value); // 0..100
-      // Show BEFORE on the left (v small) and AFTER on the right (v large)
-      before.style.clipPath = `inset(0 ${v}% 0 0)`;
+      // Invert: slider left (0) = before, slider right (100) = after
+      before.style.width = (100 - v) + '%';
+      console.log('Slider value:', v, 'before width:', before.style.width);
     };
-    range.addEventListener('input', update);
-    update();
-  });
-(() => {
-  let lang = 'EN';
-  const btn = document.getElementById('langToggle');
-  const setLang = (L) => {
-    lang = L;
-    btn.textContent = (lang === 'EN') ? 'ES' : 'EN';
-    document.querySelectorAll('[data-en][data-es]').forEach(el => {
-      const txt = (lang === 'EN') ? el.getAttribute('data-en') : el.getAttribute('data-es');
-      // Write directly to the element (works for span.cap)
-      el.textContent = txt;
+    range.addEventListener('input', update); // Reverting to 'input' for real-time feedback
+    update(); // Initial run
+    
+    // Click to toggle between before (0) and after (100)
+    ba.addEventListener('click', (e) => {
+      if (e.target === range) return; // don't interfere with slider drag
+      const current = Number(range.value);
+      const newValue = current === 0 ? 100 : 0;
+      range.value = newValue;
+      update();
     });
-  };
-  if (btn) {
-    btn.addEventListener('click', () => setLang(lang === 'EN' ? 'ES' : 'EN'));
-  }
-  // Initialize captions
-  setLang('EN');
-
-  // Touch support: tap to toggle overlay
-  document.querySelectorAll('.tile').forEach(tile => {
-    tile.addEventListener('click', (e) => {
-      if (e.target.closest('a,button')) return;
-      tile.classList.toggle('show');
-    });
-  });
-  // Before/After slider logic: clip the BEFORE image based on range value
-  document.querySelectorAll('.tile.slider .ba').forEach(ba => {
-    const before = ba.querySelector('.before');
-    const range = ba.querySelector('input[type=range]');
-    const update = () => {
-      const v = Number(range.value); // 0..100
-      // Show BEFORE on the left (v small) and AFTER on the right (v large)
-      before.style.clipPath = \`inset(0 \${v}% 0 0)\`;
-    };
-    range.addEventListener('input', update);
-    update();
   });
   
   // --- NEW REEL TEMPLATE LOGIC ---
@@ -120,11 +96,11 @@
   // Determine which reel plan to display notes for
   const reelSection = document.querySelector('.reel-notes');
   if (reelSection) {
-    let reelKey = 'Reel: From “fine” to favorite clip'; // Default for placeholder site
+    let reelKey = "Reel: From \"fine\" to favorite clip"; // Default for placeholder site
     
     // Check if we are on the 'real.html' page or the placeholder page
     if (window.location.href.includes('real.html')) {
-      reelKey = 'Reel: From “fine” to favorite item'; // Use the other reel plan for the realistic site mock
+      reelKey = "Reel: From \"fine\" to favorite item"; // Use the other reel plan for the realistic site mock
     }
     
     const currentTemplate = reelTemplates[reelKey];
@@ -152,4 +128,7 @@
     }
   }
   // --- END NEW REEL TEMPLATE LOGIC ---
+} catch (err) {
+  console.error('Social preview error:', err);
+}
 })();
