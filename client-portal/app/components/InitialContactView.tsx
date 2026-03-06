@@ -117,6 +117,9 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     console.log('handleSave called', { folderId, formData });
     if (!isMountedRef.current) return;
     
+    // Notify header that saving has started
+    window.dispatchEvent(new CustomEvent('initial-contact-saving-state', { detail: { saving: true } }));
+    
     setSaving(true);
     setError(null);
     setSaveSuccess(false);
@@ -129,6 +132,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       };
       console.log('Data to save:', dataToSave);
       
+      console.log('Sending POST to /api/project/initial-contact with folderId:', folderId);
       const response = await fetch('/api/project/initial-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -138,8 +142,16 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
         }),
       });
       
+      const responseText = await response.text();
+      console.log('Response status:', response.status, 'Response text:', responseText);
+      
       if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          errorData = JSON.parse(responseText);
+        } catch (e) {
+          errorData = { error: responseText || 'Unknown error' };
+        }
         throw new Error(errorData.error || `Failed to save: ${response.status}`);
       }
       
@@ -157,8 +169,24 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       setError(err instanceof Error ? err.message : 'Failed to save data');
     } finally {
       setSaving(false);
+      // Notify header that saving has finished
+      window.dispatchEvent(new CustomEvent('initial-contact-saving-state', { detail: { saving: false } }));
     }
   }, [formData, folderId]);
+
+  // Listen for save click events from the header button
+  useEffect(() => {
+    const handleSaveClick = () => {
+      console.log('InitialContactView: Save click event received');
+      handleSave();
+    };
+    
+    window.addEventListener('initial-contact-save-click', handleSaveClick as EventListener);
+    
+    return () => {
+      window.removeEventListener('initial-contact-save-click', handleSaveClick as EventListener);
+    };
+  }, [handleSave]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,27 +218,11 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
       </div>
     );
   }
+  console.log('InitialContactView loaded, folderId:', folderId, 'formData:', formData);
 
   return (
     <div className="initial-contact-view bg-white rounded-lg border border-gray-200 shadow-sm overflow-auto">
-      {/* Header with save button */}
-      <div className="sticky top-0 z-10 border-b border-gray-200 bg-gray-50 px-4 py-2">
-        <div className="flex items-center justify-end">
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={saving}
-            className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? (
-              <>
-                <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent mr-1"></span>
-                Saving...
-              </>
-            ) : 'Save'}
-          </button>
-        </div>
-      </div>
+      
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-6">

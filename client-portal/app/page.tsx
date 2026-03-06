@@ -98,6 +98,8 @@ export default function ClientPortalHome() {
   // User notes creation state
   const [creatingUserNotes, setCreatingUserNotes] = useState(false);
   const [userNotesNotification, setUserNotesNotification] = useState<string | null>(null);
+  // Initial Contact save state
+  const [initialContactSaving, setInitialContactSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // TTS refs
   const voicesLoadedRef = useRef(false);
@@ -201,6 +203,20 @@ export default function ClientPortalHome() {
       if (recognition) {
         recognition.stop();
       }
+    };
+  }, []);
+
+  // Listen for Initial Contact saving state updates from the component
+  useEffect(() => {
+    const handleSavingStateEvent = (event: CustomEvent) => {
+      const { saving } = event.detail;
+      setInitialContactSaving(saving);
+    };
+    
+    window.addEventListener('initial-contact-saving-state', handleSavingStateEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('initial-contact-saving-state', handleSavingStateEvent as EventListener);
     };
   }, []);
 
@@ -2067,34 +2083,55 @@ export default function ClientPortalHome() {
           </div>
         ) : selectedStep && (
           <div className="mt-2 w-full">
-            <div className="flex items-center text-sm flex-wrap gap-1">
-              <button
-                onClick={closeStepView}
-                className="text-[#2c3e50] hover:text-[#c5a059] flex items-center gap-1"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                {selectedProject?.clientName}
-              </button>
+            <div className="flex items-center justify-between text-sm flex-wrap gap-1">
+              <div className="flex items-center flex-wrap gap-1">
+                <button
+                  onClick={closeStepView}
+                  className="text-[#2c3e50] hover:text-[#c5a059] flex items-center gap-1"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  {selectedProject?.clientName}
+                </button>
+                
+                {folderPath.map((folder, index) => (
+                  <div key={folder.id} className="flex items-center">
+                    <span className="mx-1 text-gray-400">/</span>
+                    {index === folderPath.length - 1 ? (
+                      <span className="font-medium text-[#c5a059] truncate max-w-[120px] md:max-w-[200px]">
+                        {folder.name}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => navigateBackInPath(index)}
+                        className="text-[#2c3e50] hover:text-[#c5a059] truncate max-w-[120px] md:max-w-[200px]"
+                      >
+                        {folder.name}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
               
-              {folderPath.map((folder, index) => (
-                <div key={folder.id} className="flex items-center">
-                  <span className="mx-1 text-gray-400">/</span>
-                  {index === folderPath.length - 1 ? (
-                    <span className="font-medium text-[#c5a059] truncate max-w-[120px] md:max-w-[200px]">
-                      {folder.name}
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => navigateBackInPath(index)}
-                      className="text-[#2c3e50] hover:text-[#c5a059] truncate max-w-[120px] md:max-w-[200px]"
-                    >
-                      {folder.name}
-                    </button>
-                  )}
-                </div>
-              ))}
+              {/* Save button for Initial Contact step */}
+              {selectedStep?.stepName === 'Initial Contact' && (
+                <button
+                  onClick={() => {
+                    console.log('Initial Contact save button clicked');
+                    window.dispatchEvent(new CustomEvent('initial-contact-save-click'));
+                  }}
+                  disabled={initialContactSaving}
+                  className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {initialContactSaving ? (
+                    <>
+                      <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent mr-1"></span>
+                      Saving...
+                    </>
+                  ) : 'Save'}
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -2242,15 +2279,7 @@ export default function ClientPortalHome() {
             <div className="flex-1 flex flex-col">
             
             
-            {!stepContents.some(item => 
-                item.type === 'folder' && item.name.toLowerCase().includes('iteration')
-              ) && (
-                <div className="mb-2">
-                  <h2 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">
-                    {folderPath.length > 1 ? folderPath[folderPath.length - 1].name : selectedStep?.stepName}
-                  </h2>
-                </div>
-              )}
+
               {/* Hidden file input - keep for upload functionality */}
               <input
                 type="file"
