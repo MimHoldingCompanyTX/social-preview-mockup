@@ -1973,14 +1973,98 @@ export default function ClientPortalHome() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header - Matching SheilaGutierrezDesigns.com styling with integrated breadcrumbs */}
-      <header className={`fixed top-0 left-0 right-0 z-40 ${selectedStep ? 'h-32' : 'h-20'} border-b border-black/5 bg-white/85 backdrop-blur-sm flex flex-col justify-center py-2 px-6 md:px-10`}>
+      <header className={`fixed top-0 left-0 right-0 z-40 ${viewingNotesInline || selectedStep ? 'h-32' : 'h-20'} border-b border-black/5 bg-white/85 backdrop-blur-sm flex flex-col justify-center py-2 px-6 md:px-10`}>
         <div className="flex items-center justify-start w-full">
           <div className="min-w-0">
             <h1 className="font-[var(--font-playfair)] text-[#2c3e50] text-[1.4rem] font-bold tracking-[3px] truncate">Sheila Gutierrez Designs</h1>
             <p className="text-[0.85rem] font-normal text-[#2c3e50]/80 mt-0.5 font-[var(--font-lato)] tracking-[2px] uppercase transition-colors duration-300 truncate">Client Portal</p>
           </div>
         </div>
-        {selectedStep && (
+        {viewingNotesInline ? (
+          <div className="mt-2 w-full">
+            <div className="flex items-center justify-between text-sm flex-wrap gap-1">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={closeInlineNotes}
+                  className="text-[#2c3e50] hover:text-[#c5a059] p-1 rounded-md hover:bg-gray-100"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                </button>
+                <button
+                  onClick={closeInlineNotes}
+                  className="text-md font-semibold text-[#2c3e50] truncate hover:text-[#c5a059] hover:underline focus:outline-none"
+                  title="Click to go back"
+                >
+                  {(() => {
+                    // Extract iteration number from spec filename
+                    // Pattern: moodboard_X_spec.md -> Iteration X
+                    if (inlineNotesFile?.name) {
+                      const match = inlineNotesFile.name.match(/moodboard_(\d+)_spec\.md/i);
+                      if (match && match[1]) {
+                        return `Iteration ${match[1]}`;
+                      }
+                    }
+                    return inlineNotesFile?.name || 'Notes';
+                  })()}
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                {/* TTS buttons for markdown/text files */}
+                {inlineNotesFile && (inlineNotesFile.name.toLowerCase().endsWith('.md') || inlineNotesFile.mimeType === 'text/markdown' || inlineNotesFile.mimeType === 'text/plain') && inlineNotesContent.trim().length > 0 && (
+                  <>
+                    <button
+                      onClick={() => {
+                        if (ttsSpeaking && ttsLanguage === 'en') {
+                          stopSpeaking();
+                        } else {
+                          handleSpeakEnglish(inlineNotesContent);
+                        }
+                      }}
+                      className={`px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                        ttsSpeaking && ttsLanguage === 'en' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                      }`}
+                      title="Speak in English"
+                    >
+                      {ttsSpeaking && ttsLanguage === 'en' ? '⏸️' : '🔊 EN'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (ttsSpeaking && ttsLanguage === 'es') {
+                          stopSpeaking();
+                        } else {
+                          handleSpeakSpanish(inlineNotesContent);
+                        }
+                      }}
+                      className={`px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                        ttsSpeaking && ttsLanguage === 'es' 
+                          ? 'bg-green-600 text-white' 
+                          : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                      }`}
+                      title="Speak in Spanish"
+                    >
+                      {ttsSpeaking && ttsLanguage === 'es' ? '⏸️' : '🔊 ES'}
+                    </button>
+                  </>
+                )}
+                {/* Auto-save status indicator */}
+                {isAutoSaving ? (
+                  <div className="flex items-center text-xs text-gray-500 px-2">
+                    <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500 mr-1"></div>
+                    Saving...
+                  </div>
+                ) : lastAutoSaveTime ? (
+                  <div className="text-xs text-gray-400 px-2" title={`Last saved: ${lastAutoSaveTime.toLocaleTimeString()}`}>
+                    ✓ Saved
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : selectedStep && (
           <div className="mt-2 w-full">
             <div className="flex items-center text-sm flex-wrap gap-1">
               <button
