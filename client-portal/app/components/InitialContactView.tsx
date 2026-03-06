@@ -176,6 +176,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
 
   // Listen for save click events from the header button
   useEffect(() => {
+    console.log('InitialContactView: Setting up save click listener');
     const handleSaveClick = () => {
       console.log('InitialContactView: Save click event received');
       handleSave();
@@ -184,6 +185,7 @@ export default function InitialContactView({ folderId, clientName }: InitialCont
     window.addEventListener('initial-contact-save-click', handleSaveClick as EventListener);
     
     return () => {
+      console.log('InitialContactView: Removing save click listener');
       window.removeEventListener('initial-contact-save-click', handleSaveClick as EventListener);
     };
   }, [handleSave]);

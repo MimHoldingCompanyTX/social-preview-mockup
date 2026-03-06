@@ -210,6 +210,7 @@ export default function ClientPortalHome() {
   useEffect(() => {
     const handleSavingStateEvent = (event: CustomEvent) => {
       const { saving } = event.detail;
+      console.log('Initial Contact saving state:', saving);
       setInitialContactSaving(saving);
     };
     
@@ -2115,10 +2116,10 @@ export default function ClientPortalHome() {
               </div>
               
               {/* Save button for Initial Contact step */}
-              {selectedStep?.stepName === 'Initial Contact' && (
+              {selectedStep?.stepName === 'Initial Contact' && currentFolderId === selectedStep.id && (
                 <button
                   onClick={() => {
-                    console.log('Initial Contact save button clicked');
+                    console.log('Initial Contact save button clicked', { selectedStep, currentFolderId, initialContactSaving });
                     window.dispatchEvent(new CustomEvent('initial-contact-save-click'));
                   }}
                   disabled={initialContactSaving}
