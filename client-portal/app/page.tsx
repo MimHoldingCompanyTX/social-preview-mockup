@@ -6,6 +6,7 @@ import GalleryView from './components/GalleryView';
 import FullScreenViewer from './components/FullScreenViewer';
 import InlineGalleryViewer from './components/InlineGalleryViewer';
 import IterationView from './components/IterationView';
+import InitialContactView from './components/InitialContactView';
 
 interface Project {
   id: string;
@@ -2278,32 +2279,47 @@ export default function ClientPortalHome() {
                   </button>
                 </div>
               </div>
-            ) : stepContents.length === 0 ? (
-              <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                </svg>
-                <h3 className="mt-4 text-lg font-medium text-[#2c3e50]">No files in this folder</h3>
-                <p className="mt-2 text-gray-500">This {selectedStep?.stepName} folder is empty.</p>
-              </div>
             ) : (
-              <div className="pb-20">
-                {/* Check for iteration folders - show special view if found */}
-                {stepContents.some(item => 
-                  item.type === 'folder' && item.name.toLowerCase().includes('iteration')
-                ) ? (
-                  <IterationView
-                    items={stepContents}
-                    stepName={selectedStep?.stepName || 'Moodboard'}
-                    onSpecAvailable={setActiveIterationSpecFile}
+              // Check for Initial Contact step first
+              selectedStep?.stepName === 'Initial Contact' && currentFolderId === selectedStep.id ? (
+                <div className="flex-1 flex flex-col">
+                  <div className="mb-2">
+                    <h2 className="text-lg font-semibold text-[#2c3e50] font-[var(--font-playfair)]">
+                      {folderPath.length > 1 ? folderPath[folderPath.length - 1].name : selectedStep?.stepName}
+                    </h2>
+                  </div>
+                  <InitialContactView 
+                    folderId={currentFolderId} 
+                    clientName={selectedProject?.clientName}
                   />
-                ) : (
-                  <GalleryView
-                    items={stepContents.filter(item => !item.name.toLowerCase().endsWith('.md'))}
-                    onItemClick={handleGalleryItemClick}
-                  />
-                )}
-              </div>
+                </div>
+              ) : stepContents.length === 0 ? (
+                <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  </svg>
+                  <h3 className="mt-4 text-lg font-medium text-[#2c3e50]">No files in this folder</h3>
+                  <p className="mt-2 text-gray-500">This {selectedStep?.stepName} folder is empty.</p>
+                </div>
+              ) : (
+                <div className="pb-20">
+                  {/* Check for iteration folders - show special view if found */}
+                  {stepContents.some(item => 
+                    item.type === 'folder' && item.name.toLowerCase().includes('iteration')
+                  ) ? (
+                    <IterationView
+                      items={stepContents}
+                      stepName={selectedStep?.stepName || 'Moodboard'}
+                      onSpecAvailable={setActiveIterationSpecFile}
+                    />
+                  ) : (
+                    <GalleryView
+                      items={stepContents.filter(item => !item.name.toLowerCase().endsWith('.md'))}
+                      onItemClick={handleGalleryItemClick}
+                    />
+                  )}
+                </div>
+              )
             )}
           </div>
         )) : selectedProject ? (
