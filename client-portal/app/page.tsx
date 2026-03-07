@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import GalleryView from './components/GalleryView';
 import FullScreenViewer from './components/FullScreenViewer';
@@ -2030,7 +2032,9 @@ export default function ClientPortalHome() {
   const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean, viewingGalleryInline: boolean = false, showGallery: boolean = false, folderId: string | null = null, folderPath: Array<{id: string, name: string}> = []) => {
     // Scroll to top when navigating
     window.scrollTo(0, 0);
-    // Only push to our internal navStack - don't pollute browser history
+    // Push to browser history so back button works
+    window.history.pushState({ project: project?.id, step: step?.id, viewingInline }, '', window.location.href);
+    // Push to our internal navStack
     setNavStack(prev => [...prev, { project, step, viewingInline, viewingGalleryInline, showGallery, folderId, folderPath }]);
   }, []);
 
@@ -2315,26 +2319,33 @@ export default function ClientPortalHome() {
               
               {/* Editor Content */}
               <div className="flex-1 flex flex-col">
-                <textarea
-                  value={inlineNotesContent}
-                  onChange={handleInlineNotesChange}
-                  onFocus={handleInlineNotesFocus}
-                  onBlur={handleInlineNotesBlur}
-                  className="flex-1 w-full font-mono text-sm p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#c5a059] focus:border-transparent resize-none min-h-[calc(100vh-300px)] text-[#2c3e50]"
-                  placeholder="Start typing your notes here..."
-                  autoFocus
-                  autoComplete="new-password"
-                  inputMode="text"
-                  data-1p-ignore
-                  spellCheck="false"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  data-lpignore="true"
-                  readOnly={isTextareaReadonly}
-                  aria-label="Notes editor"
-                  id="notes-editor-spec"
-                  name="notes-editor"
-                />
+                {isEditingNotes ? (
+                  <textarea
+                    value={inlineNotesContent}
+                    onChange={handleInlineNotesChange}
+                    onFocus={handleInlineNotesFocus}
+                    onBlur={handleInlineNotesBlur}
+                    className="flex-1 w-full font-mono text-sm p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#c5a059] focus:border-transparent resize-none min-h-[calc(100vh-300px)] text-[#2c3e50]"
+                    placeholder="Start typing your notes here..."
+                    autoFocus
+                    autoComplete="new-password"
+                    inputMode="text"
+                    data-1p-ignore
+                    spellCheck="false"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    data-lpignore="true"
+                    aria-label="Notes editor"
+                    id="notes-editor-spec"
+                    name="notes-editor"
+                  />
+                ) : (
+                  <div className="flex-1 w-full p-4 overflow-auto prose max-w-none text-[#2c3e50]">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {inlineNotesContent || 'No notes content yet.'}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
             </div>
           ) : viewingGalleryInline ? (
