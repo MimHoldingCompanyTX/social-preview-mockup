@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 import GalleryView from './components/GalleryView';
 import FullScreenViewer from './components/FullScreenViewer';
@@ -48,6 +49,8 @@ export default function ClientPortalHome() {
   const [error, setError] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [dataSource, setDataSource] = useState<string>('');
+  // Navigation stack for browser back button handling
+  const [navStack, setNavStack] = useState<Array<{project: Project | null, step: WorkflowStep | null, viewingInline: boolean}>>([]);
   const [workflowSteps, setWorkflowSteps] = useState<WorkflowStep[]>([]);
   const [loadingSteps, setLoadingSteps] = useState(false);
   const [stepsError, setStepsError] = useState<string | null>(null);
@@ -590,6 +593,8 @@ export default function ClientPortalHome() {
 
   // Step view functionality
   const openStepView = useCallback(async (step: WorkflowStep) => {
+    // Push current state to navigation stack before navigating
+    pushNavState(selectedProject, selectedStep, viewingNotesInline);
     setSelectedStep(step);
     setLoadingStepContents(true);
     setStepContentsError(null);
@@ -1828,6 +1833,8 @@ export default function ClientPortalHome() {
   const handleProjectSelect = async (project: Project) => {
     try {
       console.log('handleProjectSelect called for:', project.clientName, project.id);
+      // Push current state to navigation stack before navigating
+      pushNavState(selectedProject, selectedStep, viewingNotesInline);
       setSelectedProject(project);
       setStepsError(null);
       setShowAllProjects(false);
@@ -1989,6 +1996,30 @@ export default function ClientPortalHome() {
   const displayedProjects = showAllProjects 
     ? [...projects].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     : [...projects].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3);
+
+  // Handle browser back button
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (navStack.length > 0) {
+        // Pop the last state and restore it
+        const previousState = navStack[navStack.length - 1];
+        setNavStack(prev => prev.slice(0, -1));
+        setSelectedProject(previousState.project);
+        setSelectedStep(previousState.step);
+        setViewingNotesInline(previousState.viewingInline);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navStack]);
+
+  // Helper to push state when navigating forward
+  const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean) => {
+    setNavStack(prev => [...prev, { project, step, viewingInline }]);
+    // Also push to browser history so back button works
+    window.history.pushState({ project: project?.id, step: step?.id, viewingInline }, '', window.location.href);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -2388,6 +2419,8 @@ export default function ClientPortalHome() {
             <div className="mb-6">
               <button
                 onClick={() => {
+                  // Push current state before going back
+                  pushNavState(selectedProject, selectedStep, viewingNotesInline);
                   setSelectedProject(null);
                   setWorkflowSteps([]);
                 }}
