@@ -2010,6 +2010,8 @@ export default function ClientPortalHome() {
         // Pop the last state and restore it
         const previousState = navStack[navStack.length - 1];
         setNavStack(prev => prev.slice(0, -1));
+        // Scroll to top when navigating
+        window.scrollTo(0, 0);
         setSelectedProject(previousState.project);
         setSelectedStep(previousState.step);
         setViewingNotesInline(previousState.viewingInline);
@@ -2026,6 +2028,8 @@ export default function ClientPortalHome() {
 
   // Helper to push state when navigating forward
   const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean, viewingGalleryInline: boolean = false, showGallery: boolean = false, folderId: string | null = null, folderPath: Array<{id: string, name: string}> = []) => {
+    // Scroll to top when navigating
+    window.scrollTo(0, 0);
     setNavStack(prev => [...prev, { project, step, viewingInline, viewingGalleryInline, showGallery, folderId, folderPath }]);
     // Also push to browser history so back button works
     window.history.pushState({ project: project?.id, step: step?.id, viewingInline }, '', window.location.href);
