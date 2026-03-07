@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
 import GalleryView from './components/GalleryView';
 import FullScreenViewer from './components/FullScreenViewer';
@@ -103,8 +101,6 @@ export default function ClientPortalHome() {
   // Initial Contact save state
   const [initialContactSaving, setInitialContactSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const notesTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const notesContainerRef = useRef<HTMLDivElement>(null);
   // TTS refs
   const voicesLoadedRef = useRef(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -962,50 +958,6 @@ export default function ClientPortalHome() {
     }
   };
 
-  // Helper function to convert filenames to friendly display names
-  const getFriendlyFileName = (fileName: string): string => {
-    if (!fileName) return '';
-    
-    // Remove file extension
-    let name = fileName.replace(/\.[^/.]+$/, '');
-    
-    // Replace underscores and dashes with spaces
-    name = name.replace(/[_-]/g, ' ');
-    
-    // Handle known patterns
-    if (name.toLowerCase().includes('user notes')) {
-      return 'User Notes';
-    }
-    if (name.toLowerCase().includes('system notes')) {
-      return 'System Notes';
-    }
-    if (name.toLowerCase().includes('initial contact')) {
-      return 'Initial Contact';
-    }
-    if (name.toLowerCase().includes('moodboard') && name.toLowerCase().includes('spec')) {
-      const match = name.match(/moodboard\s*(\d+)/i);
-      if (match && match[1]) {
-        return `Iteration ${match[1]} Spec`;
-      }
-      return 'Iteration Spec';
-    }
-    if (name.toLowerCase().includes('moodboard')) {
-      const match = name.match(/moodboard\s*(\d+)/i);
-      if (match && match[1]) {
-        return `Iteration ${match[1]}`;
-      }
-      return 'Moodboard';
-    }
-    
-    // Capitalize first letter of each word
-    name = name.split(' ').map(word => {
-      if (word.length === 0) return word;
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }).join(' ');
-    
-    return name;
-  };
-
   // Auto-save inline notes (doesn't close editor)
   const autoSaveInlineNotes = async () => {
     if (!inlineNotesFile) return;
@@ -1211,43 +1163,6 @@ export default function ClientPortalHome() {
       );
       setInlineNotesContent(newContent);
     }
-  };
-
-  // Start editing notes - add timestamp and focus
-  const handleStartEditing = () => {
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZoneName: 'short'
-    });
-    
-    // Add blank line and timestamp if content exists
-    let newContent = inlineNotesContent.trim();
-    if (newContent.length > 0) {
-      newContent = `${newContent}\n\n---\n**Edit started:** ${formattedDate}\n`;
-    } else {
-      newContent = `**Note started:** ${formattedDate}\n\n`;
-    }
-    
-    setInlineNotesContent(newContent);
-    setIsEditingNotes(true);
-    setIsTextareaReadonly(false);
-    
-    // Focus textarea after state update (use setTimeout to ensure DOM update)
-    setTimeout(() => {
-      if (notesTextareaRef.current) {
-        notesTextareaRef.current.focus();
-        // Move cursor to end
-        notesTextareaRef.current.selectionStart = newContent.length;
-        notesTextareaRef.current.selectionEnd = newContent.length;
-        // Scroll to bottom
-        notesTextareaRef.current.scrollTop = notesTextareaRef.current.scrollHeight;
-      }
-    }, 50);
   };
 
   // Create user notes
@@ -2102,7 +2017,17 @@ export default function ClientPortalHome() {
                   className="text-md font-semibold text-[#2c3e50] truncate hover:text-[#c5a059] hover:underline focus:outline-none"
                   title="Click to go back"
                 >
-                  {inlineNotesFile ? getFriendlyFileName(inlineNotesFile.name) : 'Notes'}
+                  {(() => {
+                    // Extract iteration number from spec filename
+                    // Pattern: moodboard_X_spec.md -> Iteration X
+                    if (inlineNotesFile?.name) {
+                      const match = inlineNotesFile.name.match(/moodboard_(\d+)_spec\.md/i);
+                      if (match && match[1]) {
+                        return `Iteration ${match[1]}`;
+                      }
+                    }
+                    return inlineNotesFile?.name || 'Notes';
+                  })()}
                 </button>
               </div>
               <div className="flex items-center gap-2">
@@ -2116,14 +2041,10 @@ export default function ClientPortalHome() {
                       });
                       setIsEditingNotes(false);
                       setIsTextareaReadonly(true);
-                      // Scroll container to bottom after save
-                      setTimeout(() => {
-                        if (notesContainerRef.current) {
-                          notesContainerRef.current.scrollTop = notesContainerRef.current.scrollHeight;
-                        }
-                      }, 100);
                     } else {
-                      handleStartEditing();
+                      // Enter editing mode
+                      setIsEditingNotes(true);
+                      setIsTextareaReadonly(false);
                     }
                   }}
                   className="px-3 py-1.5 bg-[#c5a059] text-white text-sm font-medium rounded-md hover:bg-[#b08e4d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c5a059] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -2266,6 +2187,135 @@ export default function ClientPortalHome() {
             // Inline Notes Editor
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-auto flex-1 flex flex-col">
               {/* Editor Header */}
+              <div className="border-b border-gray-200 bg-gray-50 px-4 py-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={closeInlineNotes}
+                    className="text-gray-600 hover:text-gray-900 p-1 rounded-md hover:bg-gray-100"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={closeInlineNotes}
+                    className="text-md font-semibold text-gray-900 truncate hover:text-gray-700 hover:underline focus:outline-none"
+                    title="Click to go back"
+                  >
+                    {(() => {
+                      // Extract iteration number from spec filename
+                      // Pattern: moodboard_X_spec.md -> Iteration X
+                      if (inlineNotesFile?.name) {
+                        const match = inlineNotesFile.name.match(/moodboard_(\d+)_spec\.md/i);
+                        if (match && match[1]) {
+                          return `Iteration ${match[1]}`;
+                        }
+                      }
+                      return inlineNotesFile?.name || 'Notes';
+                    })()}
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  {/* TTS buttons for markdown/text files */}
+                  {inlineNotesFile && (inlineNotesFile.name.toLowerCase().endsWith('.md') || inlineNotesFile.mimeType === 'text/markdown' || inlineNotesFile.mimeType === 'text/plain') && inlineNotesContent.trim().length > 0 && (
+                    <>
+                      <button
+                        onClick={() => {
+                          if (ttsSpeaking && ttsLanguage === 'en') {
+                            stopSpeaking();
+                          } else {
+                            handleSpeakEnglish(inlineNotesContent);
+                          }
+                        }}
+                        className={`px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                          ttsSpeaking && ttsLanguage === 'en' 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                        }`}
+                        title="Speak in English"
+                      >
+                        {ttsSpeaking && ttsLanguage === 'en' ? '⏸️' : '🔊 EN'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (ttsSpeaking && ttsLanguage === 'es') {
+                            stopSpeaking();
+                          } else {
+                            handleSpeakSpanish(inlineNotesContent);
+                          }
+                        }}
+                        className={`px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                          ttsSpeaking && ttsLanguage === 'es' 
+                            ? 'bg-green-600 text-white' 
+                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                        }`}
+                        title="Speak in Spanish"
+                      >
+                        {ttsSpeaking && ttsLanguage === 'es' ? '⏸️' : '🔊 ES'}
+                      </button>
+                    </>
+                  )}
+                  {/* Auto-save status indicator */}
+                  {isAutoSaving ? (
+                    <div className="flex items-center text-xs text-gray-500 px-2">
+                      <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500 mr-1"></div>
+                      Saving...
+                    </div>
+                  ) : lastAutoSaveTime ? (
+                    <div className="text-xs text-gray-400 px-2" title={`Last saved: ${lastAutoSaveTime.toLocaleTimeString()}`}>
+                      ✓ Saved
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              
+              {/* Editor Content */}
+              <div className="flex-1 flex flex-col">
+                <textarea
+                  value={inlineNotesContent}
+                  onChange={handleInlineNotesChange}
+                  onFocus={handleInlineNotesFocus}
+                  onBlur={handleInlineNotesBlur}
+                  className="flex-1 w-full font-mono text-sm p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#c5a059] focus:border-transparent resize-none min-h-[calc(100vh-300px)] text-[#2c3e50]"
+                  placeholder="Start typing your notes here..."
+                  autoFocus
+                  autoComplete="new-password"
+                  inputMode="text"
+                  data-1p-ignore
+                  spellCheck="false"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  data-lpignore="true"
+                  readOnly={isTextareaReadonly}
+                  aria-label="Notes editor"
+                  id="notes-editor-spec"
+                  name="notes-editor"
+                />
+              </div>
+            </div>
+          ) : viewingGalleryInline ? (
+            // Inline Gallery Viewer
+            <div className="flex-1">
+              <InlineGalleryViewer
+                items={galleryItems}
+                initialIndex={currentGalleryIndex}
+                isOpen={viewingGalleryInline}
+                onClose={closeInlineGallery}
+                onSaveNote={handleSaveNote}
+                onSpeakEnglish={handleSpeakEnglish}
+                onSpeakSpanish={handleSpeakSpanish}
+                onStopSpeaking={stopSpeaking}
+                ttsSpeaking={ttsSpeaking}
+                ttsLanguage={ttsLanguage}
+                phaseName={selectedStep?.stepName || 'Gallery'}
+              />
+            </div>
+          ) : (
+            // Selected Step Contents View (Normal)
+            <div className="flex-1 flex flex-col">
+            
+            
+
               {/* Hidden file input - keep for upload functionality */}
               <input
                 type="file"
@@ -2332,7 +2382,7 @@ export default function ClientPortalHome() {
               )
             )}
           </div>
-         ) : selectedProject ? (
+        )) : selectedProject ? (
           // Selected Project Workflow View
           <div>
             <div className="mb-6">
@@ -2528,6 +2578,10 @@ export default function ClientPortalHome() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Add Client Modal */}
+        {showAddClientModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
               <div className="mb-4">
