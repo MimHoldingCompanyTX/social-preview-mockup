@@ -160,9 +160,10 @@ export default function FullScreenViewer({
     setTranslatedContent(null);
     setDisplayLanguage('en');
     setTranslating(false);
+    setSwipeOffset(0);
     
     fetchPreview(currentItem);
-  }, [currentItem]);
+  }, [currentIndex]);
 
   // Stop TTS when item changes or component unmounts
   useEffect(() => {
@@ -281,8 +282,8 @@ export default function FullScreenViewer({
     if (!isSwiping) return;
     touchEndX.current = e.touches[0].clientX;
     const diff = touchStartX.current - touchEndX.current;
-    // Limit swipe to reasonable range
-    setSwipeOffset(Math.max(-150, Math.min(150, diff)));
+    // Limit swipe to smaller range for smoother feel
+    setSwipeOffset(Math.max(-60, Math.min(60, diff)));
   };
 
   const handleTouchEnd = () => {
