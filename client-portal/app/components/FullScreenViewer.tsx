@@ -98,6 +98,10 @@ export default function FullScreenViewer({
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Smooth swipe state
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   // Speech-to-text states
@@ -254,27 +258,35 @@ export default function FullScreenViewer({
     }
   };
 
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
   const handleNext = () => {
     if (currentIndex < items.length - 1) {
       setCurrentIndex(currentIndex + 1);
+      setSwipeOffset(0);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      setSwipeOffset(0);
     }
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    setIsSwiping(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSwiping) return;
     touchEndX.current = e.touches[0].clientX;
+    const diff = touchStartX.current - touchEndX.current;
+    // Limit swipe to reasonable range
+    setSwipeOffset(Math.max(-150, Math.min(150, diff)));
   };
 
   const handleTouchEnd = () => {
+    setIsSwiping(false);
     const swipeThreshold = 50;
     const diff = touchStartX.current - touchEndX.current;
 
@@ -286,6 +298,9 @@ export default function FullScreenViewer({
         // Swipe right, go to previous
         handlePrevious();
       }
+    } else {
+      // Snap back
+      setSwipeOffset(0);
     }
   };
 
@@ -623,7 +638,13 @@ export default function FullScreenViewer({
             <p className="text-gray-300">{previewError}</p>
           </div>
         ) : previewData?.success ? (
-          <div className="h-full w-full flex items-center justify-center">
+          <div 
+            className="h-full w-full flex items-center justify-center transition-transform duration-200 ease-out"
+            style={{ 
+              transform: `translateX(${swipeOffset}px)`,
+              willChange: 'transform'
+            }}
+          >
             {previewData.type === 'image' ? (
               <img
                 src={previewData.dataUrl || previewData.thumbnailUrl || getPreviewUrl(currentItem)}
