@@ -2030,9 +2030,8 @@ export default function ClientPortalHome() {
   const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean, viewingGalleryInline: boolean = false, showGallery: boolean = false, folderId: string | null = null, folderPath: Array<{id: string, name: string}> = []) => {
     // Scroll to top when navigating
     window.scrollTo(0, 0);
+    // Only push to our internal navStack - don't pollute browser history
     setNavStack(prev => [...prev, { project, step, viewingInline, viewingGalleryInline, showGallery, folderId, folderPath }]);
-    // Also push to browser history so back button works
-    window.history.pushState({ project: project?.id, step: step?.id, viewingInline }, '', window.location.href);
   }, []);
 
   return (
