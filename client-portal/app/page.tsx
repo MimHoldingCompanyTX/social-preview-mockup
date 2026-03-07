@@ -2433,10 +2433,21 @@ export default function ClientPortalHome() {
             <div className="mb-6">
               <button
                 onClick={() => {
-                  // Push current state before going back
-                  pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline);
-                  setSelectedProject(null);
-                  setWorkflowSteps([]);
+                  // Go back in history - just pop the last state instead of pushing
+                  if (navStack.length > 0) {
+                    const previousState = navStack[navStack.length - 1];
+                    setNavStack(prev => prev.slice(0, -1));
+                    window.scrollTo(0, 0);
+                    setSelectedProject(previousState.project);
+                    setSelectedStep(previousState.step);
+                    setViewingNotesInline(previousState.viewingInline);
+                    setViewingGalleryInline(previousState.viewingGalleryInline);
+                    setCurrentFolderId(previousState.folderId);
+                    setFolderPath(previousState.folderPath || []);
+                  } else {
+                    setSelectedProject(null);
+                    setWorkflowSteps([]);
+                  }
                 }}
                 className="mb-4 flex items-center text-sm text-[#2c3e50] hover:text-[#2c3e50]"
               >
