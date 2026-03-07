@@ -50,7 +50,7 @@ export default function ClientPortalHome() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [dataSource, setDataSource] = useState<string>('');
   // Navigation stack for browser back button handling
-  const [navStack, setNavStack] = useState<Array<{project: Project | null, step: WorkflowStep | null, viewingInline: boolean}>>([]);
+  const [navStack, setNavStack] = useState<Array<{project: Project | null, step: WorkflowStep | null, viewingInline: boolean, viewingGalleryInline: boolean, showGallery: boolean, folderId: string | null, folderPath: Array<{id: string, name: string}>}>>([]);
   const [workflowSteps, setWorkflowSteps] = useState<WorkflowStep[]>([]);
   const [loadingSteps, setLoadingSteps] = useState(false);
   const [stepsError, setStepsError] = useState<string | null>(null);
@@ -594,7 +594,7 @@ export default function ClientPortalHome() {
   // Step view functionality
   const openStepView = useCallback(async (step: WorkflowStep) => {
     // Push current state to navigation stack before navigating
-    pushNavState(selectedProject, selectedStep, viewingNotesInline);
+    pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline);
     setSelectedStep(step);
     setLoadingStepContents(true);
     setStepContentsError(null);
@@ -783,6 +783,8 @@ export default function ClientPortalHome() {
 
   // Gallery click handler - opens full screen viewer
   const handleGalleryItemClick = (item: any, index: number) => {
+    // Push current state before opening gallery
+    pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline, showGallery, currentFolderId, folderPath);
     // Set gallery items from current step contents
     setGalleryItems(stepContents);
     // Find the item's index in the original stepContents (not filtered gallery)
@@ -794,6 +796,8 @@ export default function ClientPortalHome() {
   // Open notes file in gallery viewer or inline editor
   const openNotesFile = async (notesFile: any) => {
     if (!notesFile) return;
+    // Push current state before opening notes
+    pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline, showGallery, currentFolderId, folderPath);
     // Determine if it's a markdown file
     const isMarkdown = notesFile.name.toLowerCase().endsWith('.md');
     if (isMarkdown) {
@@ -833,6 +837,8 @@ export default function ClientPortalHome() {
   // Open iteration spec file (markdown) in inline editor
   const openSpecFile = async (specFile: any) => {
     if (!specFile) return;
+    // Push current state before opening spec
+    pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline, showGallery, currentFolderId, folderPath);
     // Spec files are markdown, open inline editor
     setInlineNotesFile(specFile);
     setViewingNotesInline(true);
@@ -1834,7 +1840,7 @@ export default function ClientPortalHome() {
     try {
       console.log('handleProjectSelect called for:', project.clientName, project.id);
       // Push current state to navigation stack before navigating
-      pushNavState(selectedProject, selectedStep, viewingNotesInline);
+      pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline);
       setSelectedProject(project);
       setStepsError(null);
       setShowAllProjects(false);
@@ -2007,6 +2013,10 @@ export default function ClientPortalHome() {
         setSelectedProject(previousState.project);
         setSelectedStep(previousState.step);
         setViewingNotesInline(previousState.viewingInline);
+        setViewingGalleryInline(previousState.viewingGalleryInline);
+        setShowGallery(previousState.showGallery);
+        setCurrentFolderId(previousState.folderId);
+        setFolderPath(previousState.folderPath || []);
       }
     };
 
@@ -2015,8 +2025,8 @@ export default function ClientPortalHome() {
   }, [navStack]);
 
   // Helper to push state when navigating forward
-  const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean) => {
-    setNavStack(prev => [...prev, { project, step, viewingInline }]);
+  const pushNavState = useCallback((project: Project | null, step: WorkflowStep | null, viewingInline: boolean, viewingGalleryInline: boolean = false, showGallery: boolean = false, folderId: string | null = null, folderPath: Array<{id: string, name: string}> = []) => {
+    setNavStack(prev => [...prev, { project, step, viewingInline, viewingGalleryInline, showGallery, folderId, folderPath }]);
     // Also push to browser history so back button works
     window.history.pushState({ project: project?.id, step: step?.id, viewingInline }, '', window.location.href);
   }, []);
@@ -2420,7 +2430,7 @@ export default function ClientPortalHome() {
               <button
                 onClick={() => {
                   // Push current state before going back
-                  pushNavState(selectedProject, selectedStep, viewingNotesInline);
+                  pushNavState(selectedProject, selectedStep, viewingNotesInline, viewingGalleryInline);
                   setSelectedProject(null);
                   setWorkflowSteps([]);
                 }}
