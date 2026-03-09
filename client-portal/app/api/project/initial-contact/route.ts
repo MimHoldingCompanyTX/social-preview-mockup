@@ -67,6 +67,8 @@ export async function POST(request: Request) {
   try {
     const { folderId, data } = await request.json();
     
+    console.log('POST /api/project/initial-contact called with folderId:', folderId, 'data keys:', Object.keys(data));
+    
     if (!folderId) {
       return NextResponse.json(
         { error: 'Missing folderId in request body' },
@@ -105,6 +107,7 @@ export async function POST(request: Request) {
     const content = JSON.stringify(data, null, 2);
     console.log(`Saving initial contact to folder ${folderId} as ${INITIAL_CONTACT_FILENAME}...`);
     const file = await createOrUpdateTextFile(folderId, INITIAL_CONTACT_FILENAME, content);
+    console.log('File saved successfully:', { fileId: file.id, fileName: file.name, modifiedTime: (file as any).modifiedTime });
     
     return NextResponse.json({
       success: true,
