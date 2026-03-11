@@ -109,3 +109,51 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - Updated adjacent image sizing from `w‑auto h‑auto max‑w‑full max‑h‑full` to `w‑full h‑full object‑contain object‑center` for consistent filling.
 - Image now fills entire visible container area while retaining swipe transition support.
 - **iPhone Testing Fixes (9:01 PM)**: Darkened notes display font (`text-gray-900`), added `autoComplete="off"`, `inputMode="text"`, `data-1p-ignore` to textareas to prevent Chrome autofill popups. Created cleanup script for duplicate "user notes.md" files (original script had grouping bug; fixed version available).
+
+**Sheila Gutierrez Designs Website Deployment (2026-03-08):**
+- Next.js 15 website deployed live on Vercel at `sheilagutierrezdesigns.com`
+- Complete redesign from static HTML to modern React with mobile-first responsive design
+- Google Sheets API integration for lead capture working in production
+- Header updated from "DESIGN VIBE" to "Sheila Gutierrez Designs"
+- Version 5.1 badge added (bottom-left corner)
+- All Next.js branding removed (no favicon, dev indicators, footer text)
+- Repository: GitHub → Vercel auto-deployment pipeline established
+
+**GPT-5 Model Configuration (2026-03-08):**
+- Added `openrouter/openai/gpt-5` to OpenClaw configuration with 2-minute timeout
+- Model available to all agents but not set as default or fallback (explicit selection only)
+- Tested successfully with subagent tasks
+
+**Tax Document Processing (2026-03-08):**
+- Created detailed tax summary for accountant from 20 documents in `~/Desktop/CHIP tax`
+- Organized by category with issuer names and brief descriptions
+- Included Social Security 1099, medical expenses (stem cell treatment), travel receipts, IRS notices
+
+**Agent RED Connectivity Issues (2026-03-08):**
+- Agent RED configured with separate workspace and Telegram bot token
+- Responded to subagent ping but may have Telegram connectivity issues
+- Primary session shows timeout errors in logs
+- Needs investigation of bot token configuration
+
+**Client Portal Password-Protected Integration (2026-03-08 Evening):**
+- Password-protected client portal integrated into main design website at `/portal` route
+- Password: `2234` (simple hardcoded authentication using localStorage)
+- Navigation: "Client Portal" / "Portal del Cliente" link added to main header navigation
+- Technical fix: Route group `(portal)` with parentheses not recognized by Next.js; renamed to `app/portal/` (without parentheses)
+- Full client portal application copied from `/client-portal` project with all API routes and components
+- Dependencies: Installed `react-markdown` and `remark-gfm` for portal functionality
+- Git: All changes committed before integration for rollback safety
+- Authentication: Uses `localStorage` for session persistence with logout button
+- Dev server: Running on port 3003 with `NEXT_DISABLE_DEV_INDICATOR=1`
+- Status: Client portal successfully integrated and password-protected, ready for client access
+**Client Portal Navigation Stack Critical Fix (2026-03-09):**
+- Fixed critical bug where browser back button was skipping navigation levels and exiting portal entirely
+- Root cause: `handlePopState` was restoring current state instead of previous state
+- Solution: Rewrote navigation logic to correctly restore `navStack[n-2]` and added initial portal state
+- Added comprehensive logging to track navigation steps for debugging
+- Status: Back button now correctly steps through: Subfolder → Step → Project → Client List → Previous Page
+
+**Git Commit: Client Portal Navigation Fix (2026-03-09 22:23 CDT):**
+- Committed all portal navigation fixes to Git (commit 63826f7)
+- Changes: Route rename from app/(portal) to app/portal, back button logic, dynamic content reload, API path updates
+- Pushed to GitHub remote origin for backup
