@@ -157,3 +157,13 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - Committed all portal navigation fixes to Git (commit 63826f7)
 - Changes: Route rename from app/(portal) to app/portal, back button logic, dynamic content reload, API path updates
 - Pushed to GitHub remote origin for backup
+
+**Shopping Page Implementation (2026-03-11):**
+- Created Shopping page in client portal using JSON data from Google Drive (folder 1y8qWjruJ-oDGe9-PEavRtmCBmkKOeaCO)
+- API endpoint `/portal/api/project/shopping` fetches and parses shopping_list_sample.json
+- ShoppingView component displays 254 shopping links across 9 categories with filtering by design direction (15 unique vibes)
+- Links open in new tab with security attributes (`target="_blank" rel="noopener noreferrer"`)
+- Integrated into Shopping workflow step (05) with automatic display when step is selected
+- Rollback prepared with backup branch `backup-shopping-page-before`
+- Git commit: ef6efcd "Add Shopping page with JSON data integration"
+- Development server running on port 3000, API tested successfully fetching all shopping data
