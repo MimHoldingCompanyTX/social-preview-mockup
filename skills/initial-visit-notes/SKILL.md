@@ -14,6 +14,7 @@ You are a professional interior designer. This skill automates the extraction of
 - **Target Folder:** Identify the target local folder from the user's request. Verify the folder exists and perform a live scan (no cached lists).
 - **Clean State:** Before processing, remove any stale cache files (.image_cache.json, last_run_confirmation.txt) and verify only the intended source images are present. Never read from cached or temp files.
 - **Identify Media:** Gather all supported image and video files (JPG, JPEG, PNG, HEIC, GIF, BMP).
+- **HEIC/Color Note:** iPhone HEIC files contain 10‑bit color and wider gamut. For best color accuracy, convert HEIC to lossless PNG (or high‑quality JPEG) before analysis. Avoid aggressive compression (quality < 90) which distorts colors. Recommended conversion: `sips -Z 1024 -s format png input.heic --out output.png` or `sips -Z 1024 -s format jpeg -s formatOptions 95 input.heic --out output.jpg`.
 
 ### 2. Feature Extraction (Local Vision)
 - Process each image individually through the local vision model (`llava-llama3`).
@@ -38,7 +39,7 @@ CEILING: Estimated height, color, features (beams, fans, recessed lighting, crow
 
 FURNITURE: Every piece visible — type, style, material, color, condition, approximate size. Include sofas, chairs, tables, shelving, desks, beds, dressers, etc.
 
-FIXTURES & FITTINGS: Sinks, toilets, tubs, vanities, mirrors, towel bars, built-ins, fireplace details, TV mounts, etc. Note finish (chrome, brushed nickel, brass, matte black).
+FIXTURES & FIXED ELEMENTS: Fireplace details, TV mounts, built-ins, mirrors, shelving, lighting fixtures, and any other permanent or semi-permanent elements. **CRITICAL: Do NOT list sinks, toilets, tubs, vanities, or any bathroom fixture unless it is unambiguously visible in the photo. If no such fixtures are visible, write "No bathroom fixtures visible."** Note finish (chrome, brushed nickel, brass, matte black) if applicable.
 
 LIGHTING: Every light source — natural (windows, skylights) and artificial (overhead, lamps, sconces, recessed, under-cabinet). Note fixture style, finish, and any dark zones.
 
@@ -52,7 +53,17 @@ CONDITION & WEAR: Any damage, dated elements, water stains, peeling paint, worn 
 
 ESTIMATED DIMENSIONS: Rough room size based on scale of visible furniture and fixtures.
 
-Be brutally specific about colors — use descriptive names like "warm honey oak" not just "brown". **Only describe what is literally, unambiguously visible. No assumptions or fabrications. Missing information is better than invented information.** If you cannot see something clearly, do NOT include it in your description.
+**COLOR ACCURACY IS CRITICAL.** Be brutally specific about colors — use descriptive names like "sage green", "navy blue", "cream", "charcoal gray", "warm honey oak" not just "green", "blue", "white", "gray", "brown". 
+
+**For walls:** Note if there are accent walls of different colors. Distinguish between light/dark shades.
+
+**For furniture:** Specify exact color of upholstery/finish (e.g., "deep navy blue velvet sofa", "black leather chair").
+
+**For textiles:** Note exact colors and patterns of pillows, rugs, curtains.
+
+**If lighting makes color ambiguous,** state "color appears to be X but could be Y due to lighting". Never guess; if uncertain, describe the hue (e.g., "blue-green" rather than just "green").
+
+**Only describe what is literally, unambiguously visible. No assumptions or fabrications. Missing information is better than invented information.** If you cannot see something clearly, do NOT include it in your description.
 ```
 
 - **Floor Plans:** Scan specifically for Magic Plan sketches or architectural drawings; extract literal dimensions if found.
@@ -75,81 +86,73 @@ Be brutally specific about colors — use descriptive names like "warm honey oak
 - **Synthesis Prompt (use this exact structure):**
 
 ```
-You are an interior designer who just completed an initial visit to a client's home. You took [N] photos of one room. Here are your raw observations from each photo:
+You are documenting existing conditions of a property after an initial visit. You took [N] photos of one room. Here are your raw observations from each photo:
 
 [INSERT ALL PHOTO OBSERVATIONS]
 
-Now write polished, professional client visit notes. Synthesize ALL observations into unified paragraphs — do NOT list per-photo. Write as one designer describing one room in your own voice.
+Now write a factual, as‑is property description. This is **NOT** a design proposal—it is documentation of what exists. Synthesize ALL observations into unified paragraphs — do NOT list per‑photo. Write as a professional documenting existing conditions.
 
-Follow this EXACT format and fill EVERY section with rich, specific detail:
+Follow this EXACT format and fill ONLY sections where you have visible evidence:
 
-# Client Visit Notes — [Client/Folder Name], Initial Visit
+# Property Visit Notes — [Client/Folder Name], Initial Visit
 **Date:** [current date]
-**Designer:** Designer
-**Address (approx):** [reverse-geocoded address from EXIF, or omit if no GPS]
+**Address (approx):** [reverse‑geocoded address from EXIF — include ONLY if GPS data is present and accurate; otherwise omit entirely]
 
 ---
 
-## Room: [identify the room type from observations — Living Room, Study, Kitchen, Bathroom, etc.]
+## Room: [identify the room type from observations — Living Room, Study, Kitchen, Bathroom, etc. If ambiguous, state "Ambiguous: could be X or Y"]
 
 ## Dimensions
-Estimate the room size from what you observed. Include width, length, and ceiling height estimates. Clearly label as "estimated."
+Estimate the room size from what you observed. Include width, length, and ceiling height estimates. **Clearly label as "estimated."** If scale cannot be determined, write "Scale unclear—unable to estimate dimensions."
 
 ## Observations
 
-Write these as cohesive narrative paragraphs, NOT bullet lists. Each subsection must be a minimum of 4-6 sentences synthesizing details from ALL photos.
+Write these as concise, factual paragraphs. **Omit any subsection for which you have no visible evidence.** Do NOT invent content to fill sections.
 
 ### Layout & Flow
-How the room is organized. Entry points, traffic flow, furniture groupings, spatial relationships. Note any cramped areas or wasted space. Describe as one coherent paragraph.
+How the room is organized. Entry points, traffic paths, furniture groupings, spatial relationships. Note any cramped areas or wasted space. **If layout is not clearly visible, omit this subsection.**
 
 ### Surfaces
-Walls (color, material, condition), flooring (type, color, pattern, condition), ceiling (height, color, features like beams or molding). Be specific — "warm beige painted walls in good condition" not "beige walls." One substantial paragraph.
+Walls (color, material, condition), flooring (type, color, pattern, condition), ceiling (height, color, features like beams or molding). Be specific — "warm beige painted walls in good condition" not "beige walls." **If a surface is not visible (e.g., ceiling out of frame), omit that part.**
 
 ### Fixtures & Features
-Every fixture and furniture piece as a unified inventory. For each: type, style, material, finish color, condition. Include fireplace details, TV placement, built-ins, hardware finishes. One substantial paragraph.
+Every fixture and furniture piece **that is unambiguously visible**. For each: type, style, material, finish color, condition. Include fireplace details, TV placement, built‑ins, hardware finishes. **Do NOT list items that are partially obscured or uncertain.**
 
 ### Lighting
-Every light source — natural (windows, their size, treatments) and artificial (overhead, lamps, sconces, recessed). Note fixture styles and finishes. Identify any dark zones or areas needing better light. One substantial paragraph.
+Every light source — natural (windows, their size, treatments) and artificial (overhead, lamps, sconces, recessed). Note fixture styles and finishes. Identify any dark zones or areas needing better light. **If lighting is not visible, omit this subsection.**
 
 ### Textiles & Decor
-Curtains, rugs, throw pillows, blankets, wall art, plants, books, decorative objects. Note colors, patterns, textures, placement, and condition. One substantial paragraph.
+Curtains, rugs, throw pillows, blankets, wall art, plants, books, decorative objects. Note colors, patterns, textures, placement, and condition. **If none are visible, omit this subsection.**
 
 ## Pain Points
-List 3-5 specific, observable issues:
-- Each must reference something actually seen in the photos
-- Examples: dated fixtures, lighting gaps, clutter, worn surfaces, lack of cohesion, limited storage
+List specific, observable issues **that are clearly visible in the photos**:
+- Each must reference something actually seen
+- Examples: dated fixtures, lighting gaps, clutter, worn surfaces, limited storage
+- **If no pain points are visible, write "No obvious pain points observed."**
 
-## Designer's Initial Impressions
-Write in first person as the designer. Must include:
-- What works well (minimum 3 specific items)
-- What needs attention (minimum 3 specific items)
-- Key design opportunities (minimum 2 specific items)
+## Existing Conditions Summary
+Write in third person as a factual summary. **DO NOT include "Designer's Initial Impressions" or subjective opinions.** Include:
+- What is present (minimum 3 specific items)
+- What is missing or unclear (minimum 3 specific items)
+- Notable conditions (wear, damage, maintenance status)
 
-## Mood Board Direction
-3-5 specific design vibes. Format each as:
-"Vibe Name: brief description referencing elements observed in the room"
-Example: "Cozy Elegance: warm tones, natural textures, and sophisticated comfort inspired by the existing wood beams and neutral palette"
+**NO MOOD BOARD DIRECTION — This is an as‑is report, not a design proposal.**
+**NO COLOR PALETTE — This is an as‑is report, not a design proposal.**
+**NO NEXT STEPS — This is an as‑is report, not a design proposal.**
 
-## Color Palette
-4-6 colors drawn DIRECTLY from observable elements in the room. Format each as:
-#HEXCODE Descriptive Name
-Example: #F7F7F7 Soft Beige
-
-Include at least one accent color suggestion that complements existing tones.
-
-## Next Steps
-5-7 specific, actionable items prioritized by impact. Each must be concrete and tied to observations.
-
-CRITICAL RULES:
-- Every statement must originate from the photo observations. If not seen, do not write it.
-- **Cross‑image verification:** For sets of 3 or more photos, any furniture/fixture/feature should be mentioned in at least 2 different photo observations to be included in the final report (unless it's a large, unmistakable element like a bed in a bedroom). If an item appears in only one photo, treat it as "requires verification" and either exclude it or note the uncertainty.
-- **No interpolation:** Do not invent hybrid features by merging details from different photos. If photos show different flooring types, note the discrepancy rather than creating a unified description.
-- **Avoid uncertainty markers:** Eliminate phrases like "likely," "probably," "seems to have," "might be" unless qualified with "appears to be" based on strong visual evidence.
-- **Feature corroboration:** For each major claim in your report, mentally note which photo(s) support it. If a claim has no supporting photo observation, remove it.
-- Do NOT invent client background, lifestyle, pets, occupation, or biographical details.
-- Do NOT include a "Client Background" section.
-- Sound like a human designer writing professional field notes, not an AI generating a report.
-- Minimum total output: 1500 words. Be thorough.
+## CRITICAL RULES — STRICTLY ENFORCED:
+- **NO HALLUCINATIONS:** Every statement must originate from the photo observations. If not seen, do not write it.
+- **NO FABRICATIONS:** Do not guess, assume, or fill in common room features that aren't present.
+- **NO GUESSING:** If something is unclear, partially obscured, or cannot be determined, state "not clearly visible" or "cannot determine".
+- **Cross‑image verification:** For sets of 3 or more photos, any furniture/fixture/feature should be mentioned in at least 2 different photo observations to be included in the final report. If an item appears in only one photo, exclude it unless it's a large, unmistakable feature.
+- **No interpolation:** Do not invent hybrid features by merging details from different photos. If photos show different surfaces, note the discrepancy.
+- **Avoid uncertainty markers:** Eliminate phrases like "likely," "probably," "seems to have," "might be," "appears to be". Only describe what is **unambiguously visible**.
+- **Feature corroboration:** For each claim, note which photo(s) support it. If a claim has no supporting photo observation, remove it.
+- **Do NOT invent** client background, lifestyle, pets, occupation, or biographical details.
+- **Do NOT include** a "Client Background" section.
+- **Do NOT include** a "Designer" line.
+- **Sound like a factual property report**, not a designer's creative interpretation.
+- **Be concise.** Omit sections with no visible data. Quality of observation over quantity of words.
 ```
 
 ### 4. Output Generation
