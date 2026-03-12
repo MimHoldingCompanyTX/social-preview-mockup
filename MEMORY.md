@@ -176,4 +176,6 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - **Upload timeout:** 20-second timeout with AbortController to prevent infinite spinner (commit 2c3b63a)
 - **Debug logging:** Detailed console logging for upload debugging (commit 2063f4a)
 - **Bug fix:** Fixed img.onload overwrite bug that prevented compression (commit 04b5d3a)
-- **Current status:** All fixes deployed to Vercel, awaiting user testing
+- **Timing logs:** Added upload duration logging for Google Drive API (commit 0e70570)
+- **Debug logging:** Added DEBUG logs and temporarily disabled compression for testing (commit 0de8bb1)
+- **Current status:** Debug logs deployed, awaiting console output from iPhone to implement chunked uploads
