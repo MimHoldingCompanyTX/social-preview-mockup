@@ -173,4 +173,7 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - **Redesign:** Complete mobile-first redesign based on user feedback (commit 60d069e)
 - **Bug fix:** Default category selection now "All" instead of first category (commit 2a74517)
 - **Upload fix:** Client-side image compression added to handle Vercel 4.5MB limit (commit f4391ab)
+- **Upload timeout:** 20-second timeout with AbortController to prevent infinite spinner (commit 2c3b63a)
+- **Debug logging:** Detailed console logging for upload debugging (commit 2063f4a)
+- **Bug fix:** Fixed img.onload overwrite bug that prevented compression (commit 04b5d3a)
 - **Current status:** All fixes deployed to Vercel, awaiting user testing
