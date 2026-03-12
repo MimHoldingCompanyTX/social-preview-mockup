@@ -172,4 +172,5 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - Development server running on port 3000, API tested successfully fetching all shopping data
 - **Redesign:** Complete mobile-first redesign based on user feedback (commit 60d069e)
 - **Bug fix:** Default category selection now "All" instead of first category (commit 2a74517)
-- **Current status:** All fixes and redesign deployed to Vercel, awaiting user testing and error text from upload dialog
+- **Upload fix:** Client-side image compression added to handle Vercel 4.5MB limit (commit f4391ab)
+- **Current status:** All fixes deployed to Vercel, awaiting user testing
