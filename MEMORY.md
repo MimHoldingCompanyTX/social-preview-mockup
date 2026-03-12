@@ -170,4 +170,5 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - **Bug fix:** Added client-side file size validation for Vercel 4MB limit (commit 74c40dc)
 - **Bug fix:** Improved error handling and logging in ShoppingView (commit ea7be35)
 - Development server running on port 3000, API tested successfully fetching all shopping data
-- **Current status:** All fixes deployed to Vercel, awaiting error text from upload dialog to finalize diagnosis
+- **Redesign:** Complete mobile-first redesign based on user feedback (commit 60d069e)
+- **Current status:** All fixes and redesign deployed to Vercel, awaiting user testing and error text from upload dialog
