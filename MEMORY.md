@@ -166,4 +166,7 @@ Chip reviewed client_notes_ver_1.md generated for Joe Blow (chip_bath folder, 5 
 - Integrated into Shopping workflow step (05) with automatic display when step is selected
 - Rollback prepared with backup branch `backup-shopping-page-before`
 - Git commit: ef6efcd "Add Shopping page with JSON data integration"
+- **Bug fix:** ShoppingView was receiving step folder ID instead of client's main folder ID (fixed in commit e913c7c)
+- **Bug fix:** Added client-side file size validation for Vercel 4MB limit (commit 74c40dc)
 - Development server running on port 3000, API tested successfully fetching all shopping data
+- **Current status:** Both fixes deployed to Vercel, awaiting user testing
